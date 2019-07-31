@@ -1,5 +1,12 @@
-% Fill in the below config file for pose3d
-
+% Template config file for pose3d
+% Edit this file to enter your project specifics
+%
+% Copyright (c) 2019 Swathi Sheshadri
+% German Primate Center
+% swathishesh AT gmail DOT com
+%
+% If used in published work please see repository README.md for citation
+% and license information: https://github.com/SwathiSheshadri/pose3d
 
 %% Specify path and file name for pose3d to save your 3D reconstruction related files in
 % exp_path holds the name of the folder that gets created by pose3d for
@@ -17,6 +24,14 @@ exp_name = 'Experiment1'; % ./AllExperiments/Experiment1; **To be different for 
 
 %Are you using DeepLabCut for 2D tracking?
 usingdlc = 1; %set to 0, if using other software
+
+%which mode of 3D reconstruction do you want to use
+% 1. 'all' (2D tracked data from all cameras is used for reconstruction
+% 2. 'bestpair' (2D tracked data from best camera pair is used for 3D
+% reconstruction for every time point and feature)
+% 3. 'avg' (3D reconstructed data averaged over pairs)
+% You can also select more than 1 mode and all specified moved will be saved in the specified ordered in Data3d.mat, for instance by setting modes_3drecon = {'all', 'bestpair'};
+modes_3drecon = {'all'}; %this is the recommended mode (other possible modes are {'bestpair'},{'avg'}};
 
 %% Enter your experiment specifics
 % Fill in the number of features you have tracked in 2D using DLC or any
@@ -45,6 +60,13 @@ primary2D_datafullpath     = {'csvdatafullpath../Primary-Rubiks_1030000.csv'};
 % There must be ncams-1 path cell entries for secondary cameras (we have 5 cameras of
 % which 1 is primary and remaining are secondary)
 % this path can be anywhere that is readable by your user on the computer
+%
+% **Important info** -- 
+%----------------------
+% please maintain the order of secondary files here similar to the order you use 
+% in the variable calibvideos_secondary
+% For example : 2D tracked data from secondary1 should be from the same camera as the
+% secondary2 calib file
 secondary2D_datafullpath = [{'csvdatafullpath../Secondary1-Rubiks_1030000.csv'};...
                             {'csvdatafullpath../Secondary2-Rubiks_1030000.csv'};...
                             {'csvdatafullpath../Secondary3-Rubiks_1030000.csv'};...
@@ -58,7 +80,8 @@ squareSize = 24; %%enter your checkboard square length in mm default is 24
 calib_videos = 1; %set this to zero if you have acquired calibration images and 1 if videos
 
 % Number of frames to extract from calibration videos to use for calibration
-% Matlab recommends 10 to 20. If you have noisy calibration videos set this to 50 or more to account for some frames that get
+% Matlab recommends 10 to 20. 
+% If you have noisy calibration videos set this to 50 or more to account for some frames that get
 % rejected automatically during stereoCameraCalibration 
 frames_to_use = 35; 
 
@@ -69,6 +92,14 @@ frames_to_use = 35;
 % recorded simultaneously with every secondary camera)
 % Example below for a 5 camera system with 1 primary and 4 secondary
 % this path can be anywhere that is readable by your user on the computer
+
+% **Important info** -- 
+%----------------------
+% please maintain the order of primary and secondary video files  
+% Eg : calibPrimarywithsec1.avi is the calibration video recorded from
+% primary camera while simultaneously recording calib_sec1.avi from 
+% camera secondary1
+
 calibvideos_primary = [{'calibvideospath../calibPrimarywithsec1.avi'};...
                        {'calibvideospath../calibPrimarywithsec2.avi'};...
                        {'calibvideospath../calibPrimarywithsec3.avi'};...
@@ -98,12 +129,10 @@ CalibrationImages_format = '.png';
 folderwithpngs = '/Users/username/CalibFiles/';
 
 %% You are now done with fill up the main parameters!!! edit below for post-processing
-% (Default setting we use are below. Since our lens has very low distortion
-% (0.5%) we do not undistort further
-
+% (Default setting we use are below.)
 % Do you want to undistort 2D coordinates?
 % If your videos are already undistorted or if have low distortion lens set this to 0
-run_undistort = 0; %1: run undistort, 0: do not undistort
+run_undistort = 1; %1: run undistort, 0: do not undistort
 
 % the DLC based likelihood value threshold
 llh_thresh = 0.9; %Can choose values between 0 and 1; 
@@ -119,7 +148,7 @@ npoints = 5;%number of data points to use for filter (if you choose 1 or 2 for w
 % plots 3D reconstructed data (if you have really long recordings set nskip to higher 
 % values so check only a few examples from the reconstruction and save results)
 plotresults = 1; %plots resulting 3D coordinates at recorded fps
-nskip = 1; %min value nskip can take is 1, increase this when you have long recording (plots results from every nskip frame)
+nskip = 1; %min value nskip can take is 1, increase this when you have long recording (plots results from every nskip frames)
 
 nframes = rec_time*fps; %nothing to edit here onwards
 
@@ -155,8 +184,14 @@ end
 
 if usingdlc
     if llh_thresh == 1
+        flag_mis=1;
         uiwait(msgbox('llh_thresh must be lesser than 1. Change this and re-run main program to proceed.'))
     end
+end
+
+if ~iscell(modes_3drecon)
+    flag_mis = 1;
+    uiwait(msgbox('modes_3drecon must be cell type. Change this and re-run main program to proceed.'))
 end
 
 if ~exist('flag_mis','var')

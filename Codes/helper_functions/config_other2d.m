@@ -1,24 +1,32 @@
-% Fill in the below config file for recon3D. Since recon3D does most of the 
-% pre-processing steps automatically it is important that the right
-% path and filenames are available in this config file. 
+% Config file for demo_other2d (not to be edited)
+% Use this as an example to build your own config file (from provided template)
+% for main_pose3d
+%
+% Copyright (c) 2019 Swathi Sheshadri
+% German Primate Center
+% swathishesh AT gmail DOT com
+%
+% If used in published work please see repository README.md for citation
+% and license information: https://github.com/SwathiSheshadri/pose3d
 
 
-%% Specify path and file name for recon3D to save your 3D reconstruction related files in
-% exp_path holds the name of the folder that gets created by recon3D for
+%% Specify path and file name for pose3d to save your 3D reconstruction related files in
+% exp_path holds the name of the folder that gets created by pose3d for
 % your experiment. 
 % All experiments in this folder access the same calibration files
 % Therefore, everytime you move cameras or record from a different setup
 % change this name, otherwise you can keep this fixed
 
-exp_path = 'Demo_Experiments';%'AllExperiments'; %./AllExperiments **To be different for every new camera configuration/experiment setup**
-
+exp_path = 'Demo_Experiments';
 % exp_name holds the name of your experiment sessions which will also get
-% creates by recon3D for your session specific data files
+% creates by pose3d for your session specific data files
 
-exp_name = 'Rubikscube_other2d'; % ./AllExperiments/Experiment1; **To be different for every new experiment**
+exp_name = 'Rubikscube_other2d'; 
 
 %Are you using DeepLabCut for 2D tracking?
 usingdlc = 0;  %set to 0, if using any other software
+
+modes_3drecon = {'all','avg'};
 
 %% Enter your experiment specifics
 % Fill in the number of features you have tracked in 2D using DLC or any
@@ -62,32 +70,30 @@ calib_videos = 0; %set this to zero if you have acquired calibration images and 
 % rejected automatically during stereoCameraCalibration 
 frames_to_use = 25; 
 
-%% calibfiles_format & folderwithpngs . are relevant only when you have taken images for calibration instead of videos 
+%% calibfiles_format & folderwithpngs . are relevant only when you have taken images for calibration instead of videos (this is no required for the demo; left here only for reference)
 % format variable relevant only if you have calibration images (i.e
 % calib_videos = 0), if you have videos the file path must include the full
 % file name 
-calibfiles_format = '.png'; 
+% calibfiles_format = '.png'; 
 
 %this allows matlab's multi select user interfact to open this folder and
 %reduces the amount of navigation user has to do to select all required
 %files
-folderwithpngs = '/Users/ssheshadri/Mac_local_files/workspace_3d/CubeCase1/CalibFiles/';
+% folderwithpngs = '/Users/ssheshadri/workspace_3d/CubeCase1/CalibFiles/';
 
-%% Copy and paste your calibration video paths and file names
+%% Copy and paste your calibration video paths and file names (this is not required for the demo; left here only for reference)
 
-
-% For recon3D there must be 4 videos recorded from primary (each video
+% For pose3d there must be 4 videos recorded from primary (each video
 % recorded simultaneously with every secondary camera)
-calibvideos_primary    = [{'/Users/ssheshadri/Mac_local_files/JOSS_data/RecSession_11th_July_2019/Calib_top_lf4-0000.avi'};
-    {'/Users/ssheshadri/Mac_local_files/JOSS_data/RecSession_11th_July_2019/Calib_top_rf4-0000.avi'};...
-                             {'/Users/ssheshadri/Mac_local_files/JOSS_data/RecSession_11th_July_2019/Calib_top_lb4-0000.avi'};{'/Users/ssheshadri/Mac_local_files/JOSS_data/RecSession_11th_July_2019/Calib_top_rb4-0000.avi'};]; %path to your calibration video recorded from secondary camera 1 with primary
+% calibvideos_primary    = [{'/Users/ssheshadri/RecSession_11th_July_2019/Calib_primary_secondary1-0000.avi'};
+%     {'/Users/ssheshadri/RecSession_11th_July_2019/Calib_primary_secondary2-0000.avi'};...
+%                              {'/Users/ssheshadri/RecSession_11th_July_2019/Calib_primary_secondary3-0000.avi'};{'/Users/ssheshadri/RecSession_11th_July_2019/Calib_primary_secondary4-0000.avi'};]; %path to your calibration video recorded from secondary camera 1 with primary
 
 %Every secondary camera must have one calibration video recorded
 %simultaneously with primary camera
-calibvideos_secondary  = [{'/Users/ssheshadri/Mac_local_files/JOSS_data/RecSession_11th_July_2019/Calib_top_lf1-0000.avi'};
-    {'/Users/ssheshadri/Mac_local_files/JOSS_data/RecSession_11th_July_2019/Calib_top_rf2-0000.avi'};...
-                             {'/Users/ssheshadri/Mac_local_files/JOSS_data/RecSession_11th_July_2019/Calib_top_lb3-0000.avi'};{'/Users/ssheshadri/Mac_local_files/JOSS_data/RecSession_11th_July_2019/Calib_top_rb5-0000.avi'};]; %path to your calibration video recorded from secondary camera 1 with primary
-
+% calibvideos_secondary  = [{'/Users/ssheshadri/RecSession_11th_July_2019/Calib_secondary1-0000.avi'};
+%     {'/Users/ssheshadri/RecSession_11th_July_2019/Calib_secondary2-0000.avi'};...
+%                              {'/Users/ssheshadri/RecSession_11th_July_2019/Calib_secondary3-0000.avi'};{'/Users/ssheshadri/RecSession_11th_July_2019/Calib_top_secondary4-0000.avi'};]; %path to your calibration video recorded from secondary camera 1 with primary
 
 %% You are now done with fill up the main parameters!!! edit below for post-processing
 % (By default we have set to undistort images, apply DLC likelihood based threshold of 0.9 and
@@ -110,7 +116,7 @@ npoints = 0;%number of data points to use for filter (if you choose 1 or 2 for w
 
 nframes = rec_time*fps; %nothing to edit here
 
-%% Some checks to make recon3D user-friendly
+%% Some checks to make pose3d user-friendly
 % Check if there are the right number csv of files & if all files are unique
 
 if ((length(unique(secondary2D_datafullpath))) ~= ncams-1 || (length(unique(primary2D_datafullpath)) ~= 1))
@@ -121,13 +127,7 @@ end
 % Check if .csv files are provided for 2D tracked data 
 if(~all(arrayfun(@(x,y)strcmp(secondary2D_datafullpath{x}(end-2:end),'csv'),1:4)))
     flag_mis = 1;
-    uiwait(msgbox('csv file expected by recon3D. Please enter 2D tracked data in csv format and re-run main program.'))
-end
-
-%Check if there are the right number of unique calibration files
-if ((length(unique(calibvideos_primary))) ~= ncams-1 || (length(unique(calibvideos_secondary)) ~= ncams-1))
-   flag_mis = 1;
-   uiwait(msgbox('Check if all calibration file names are unique and are included for every primary-secondary pair and re-run main program.'))
+    uiwait(msgbox('csv file expected by pose3d. Please enter 2D tracked data in csv format and re-run main program.'))
 end
 
 if ~exist('flag_mis','var')

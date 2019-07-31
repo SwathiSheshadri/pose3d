@@ -1,18 +1,19 @@
-%make_illustrative_movie.m
+% make_illustrative_movie.m (example code to make movies containing 2D and
+% 3D tracked data as shown in Figure 1 of the repository readme.md file
 %
-%Compute 3D data first before running this code for your experiment
-%This function plots 3D reconstruction data alongside 2D tracking performed from all cameras
-%In addition this function makes a movie of the same
-%
-%Files required: Video files must be present in the experiment folder consisting 2D annotated videos 
-%as illustrated in the experiment Rubikscube_DLC2d
+% Compute 3D data first before running this code for your experiment
+% This function plots 3D reconstruction data alongside 2D tracking performed from all cameras
+% In addition this function makes a movie of the same
+% 
+% Before running this function
+% Video files must be present at [exp_path '/' exp_name '/Videos/']
 %
 % Copyright (c) 2019 Swathi Sheshadri
 % German Primate Center
 % swathishesh AT gmail DOT com
 %
 % If used in published work please see repository README.md for citation
-% and license information: https://github.com/SwathiSheshadri/recon3D
+% and license information: https://github.com/SwathiSheshadri/pose3d
 
 
 clear 
@@ -20,7 +21,7 @@ close all
 clc
 
 %Take initialized values from config file
-config_DLC2d
+template_config_file %call your config file here
 
 load([exp_path '/' exp_name '/Data3d/Data3d.mat'],'coords3dall')
 
@@ -31,14 +32,14 @@ color_map_self=colorclass(1:nfeatures:64,:);
 
 %Place your DLC labelled video files in the project under Videos folder
 
-v = dir([exp_path '/' exp_name '/Videos/*.mp4']);
+v = dir([exp_path '/' exp_name '/Videos/*.mp4']); %Place your DLC labelled video files at this location
 cam = cell(ncams,1);
 for icams = 1:ncams
     cam{icams,1} = VideoReader([v(icams,1).folder '/' v(icams,1).name]);
 end
 
 %to make video
-vidfile = VideoWriter([exp_path '/' exp_name '/Videos/Demo2D_3Dmovie.mp4'],'MPEG-4');
+vidfile = VideoWriter([exp_path '/' exp_name '/Videos/' exp_name '2D_3Dmovie.mp4'],'MPEG-4');
 vidfile.FrameRate = fps;
 open(vidfile)
 

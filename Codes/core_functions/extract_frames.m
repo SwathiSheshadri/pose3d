@@ -4,15 +4,12 @@ function flag_mis = extract_frames(full_file_path,dest_path,frames_to_use,flag_m
 % ------------
 % Helperfunction showing how to extract calibration frames from video
 % stereoCameraCalibrator function recommends using 10 to 20 images for
-% calibration. Set nskip accordingly.
+% calibration. 
 % For good calibration these 10 to 20 examples must include checker board
 % presented in different angles to the cameras
 % Alternatively, one could extract and use ~100 to 150 frames per camera
 % (takes longer then)
-% Having more images for calibration also increases possibility of some
-% pairs with very high reprojection errors. In that case use the GUI to easily identify
-% and remove outliers when using stereoCameraCalibrator function
-
+%
 % Inputs: 
 % -------
 % full_file_path : of your calibration file
@@ -36,7 +33,7 @@ function flag_mis = extract_frames(full_file_path,dest_path,frames_to_use,flag_m
 % swathishesh AT gmail DOT com
 %
 % If used in published work please see repository README.md for citation
-% and license information: https://github.com/SwathiSheshadri/recon3D
+% and license information: https://github.com/SwathiSheshadri/pose3d
 
 
 try

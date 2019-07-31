@@ -3,6 +3,7 @@ function [X] = triangulate_ncams(points,cam_mat,idx_goodness,reconMode)
 %
 % Inputs: 
 % Required: 
+% ---------
 % 1) points size(2*ncams); 
 % points are the (x,y) pixel coordinates obtained from 2D tracking
 %
@@ -14,16 +15,19 @@ function [X] = triangulate_ncams(points,cam_mat,idx_goodness,reconMode)
 % cam_mat = cameraMatrix(stereoParams.CameraParameters2,stereoParams.RotationOfCamera2, stereoParams.TranslationOfCamera2)';
 %
 % Optional Inputs:
+% ----------------
 % 3)idx_goodness size(ncams*1)
 % Rank for cameras based on 
 % 4)reconMode select from below 3 options
-% 'all' - ones(1,ncams), all cameras with 2D tracking crossing a user-defined threshold
-% are used for 3D reconstruction
-% 'bestpair' - two best cameras in
-% 'avg' - average of all pairs
-% Default : 'all'
-
-% Outputs: X : point reconstructed in 3d
+%
+% 1. 'all' (Recommended mode) 2D tracked data from all cameras is used for reconstruction
+% 
+% 2. 'bestpair' (2D tracked data from best camera pair is used for 3D
+% reconstruction for every time point and feature)
+% 3. 'avg' (3D reconstructed data averaged over all pairs)
+%
+% Outputs: 
+% --------
 % X : 3D reconstructed point
 
 % Copyright (c) 2019 Swathi Sheshadri
@@ -31,7 +35,7 @@ function [X] = triangulate_ncams(points,cam_mat,idx_goodness,reconMode)
 % swathishesh AT gmail DOT com
 %
 % If used in published work please see repository README.md for citation
-% and license information: https://github.com/SwathiSheshadri/recon3D
+% and license information: https://github.com/SwathiSheshadri/pose3d
 
 % Check number of inputs.
 if nargin > 4

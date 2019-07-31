@@ -1,4 +1,4 @@
-% Template code to perform analysis and plot your 3D reconstructed data
+% Demo analysis and plotting of 3D reconstructed data
 % Fill in template_config_your_experiment_DLC2d.m file with your experiment parameters before running this
 %
 % Copyright (c) 2019 Swathi Sheshadri
@@ -6,28 +6,32 @@
 % swathishesh AT gmail DOT com
 %
 % If used in published work please see repository README.md for citation
-% and license information: https://github.com/SwathiSheshadri/recon3D
+% and license information: https://github.com/SwathiSheshadri/pose3d
 
 if ~flag_mis == 1
     
 %% Filtering as per config file specifications
 %the 3D reconstructed data points can be filtered using one of the below two options
 %recommended (median filter)
+if whichfilter
+filtereddata = nan(size(coords3d));
 switch whichfilter
     case 1 %moving average
         for i = 1:3*nfeatures
-            coords3dall(:,i) = conv(coords3dall(:,i),1/npoints*ones(1,npoints),'same');
-            coords3davg(:,i) = conv(coords3davg(:,i),1/npoints*ones(1,npoints),'same');
+            for imodes = 1:length(modes_3drecon)
+                filtereddata(:,i,imodes) = conv(coords3d(:,i,imodes),1/npoints*ones(1,npoints),'same');
+            end
         end
     case 2 %median filter
         for i = 1:3*nfeatures
-            coords3dall(:,i) = oneD_medfilt(coords3dall(:,i),npoints); %if you have Signal Processing toolbox for MATLAB, this function can be replaced by medfilt1
-            coords3davg(:,i) = oneD_medfilt(coords3davg(:,i),npoints);
+            for imodes = 1:length(modes_3drecon)
+                filtereddata(:,i,imodes) = oneD_medfilt(coords3d(:,i,imodes),npoints); %if you have Signal Processing toolbox for MATLAB, this function can be replaced by medfilt1
+            end
         end
-    case 0
-        %do nothing
 end
-
+coords3d = filtereddata;
+filtereddata =[];
+end
 
 %% Edge reconstruction accuracy measurement to compare modes of 3D reconstruction
 
@@ -44,8 +48,8 @@ for ipairs = 1:size(drawline,1)
     i_1 = drawline(ipairs,1);
     i_2 = drawline(ipairs,2);
     %Edge length reconstruction
-    reconall(:,ipairs) = sqrt(sum((coords3dall(:,3*(i_1-1)+1:3*i_1) - coords3dall(:,3*(i_2-1)+1:3*i_2)) .^ 2,2));
-    reconavg(:,ipairs) = sqrt(sum((coords3davg(:,3*(i_1-1)+1:3*i_1) - coords3davg(:,3*(i_2-1)+1:3*i_2)) .^ 2,2));
+    reconall(:,ipairs) = sqrt(sum((coords3d(:,3*(i_1-1)+1:3*i_1,1) - coords3d(:,3*(i_2-1)+1:3*i_2,1)) .^ 2,2));
+    reconavg(:,ipairs) = sqrt(sum((coords3d(:,3*(i_1-1)+1:3*i_1,2) - coords3d(:,3*(i_2-1)+1:3*i_2,2)) .^ 2,2));
     
 end
 
@@ -68,9 +72,9 @@ end
 
 
 %setting maximum and minimum of axis of visualization
-xvals = coords3dall(:,1:3:nfeatures*3); 
-yvals = coords3dall(:,2:3:nfeatures*3);
-zvals = coords3dall(:,3:3:nfeatures*3);
+xvals = coords3d(:,1:3:nfeatures*3,1); 
+yvals = coords3d(:,2:3:nfeatures*3,1);
+zvals = coords3d(:,3:3:nfeatures*3,1);
 
 xmax = max(xvals(:));
 xmin = min(xvals(:));
@@ -86,9 +90,9 @@ figure
 colorclass = colormap(jet); %jet is default in DLC 
 color_map_self=colorclass(1:nfeatures:64,:);
 
-for t =1:1:size(coords3dall,1)
+for t =1:1:size(coords3d,1)
     
-    temp = reshape(coords3dall(t,:),3,nfeatures);
+    temp = reshape(coords3d(t,:,1),3,nfeatures);
     scatter3(temp(1,:),temp(2,:),temp(3,:),250*ones(1,nfeatures),color_map_self(1:nfeatures,:),'filled');  
     hold on
     if ~any(drawline==0)
@@ -105,7 +109,7 @@ for t =1:1:size(coords3dall,1)
     %views to suit your data)
     set(gca,'xtick',[],'ytick',[],'ztick',[],'view',[-10.0500   30.6124],'xlim',[xmin xmax],'ylim',[ymin ymax],'zlim',[zmin zmax],'Zdir', 'reverse') %change view and axis limits to fit your data
     
-    pause(1)  
+    pause(0.5)  
 
 end
 
@@ -113,7 +117,7 @@ end
 if whichfilter
     if ~exist([exp_path '/' exp_name '/FilteredData3d/Data3d.mat'],'file') 
         mkdir([exp_path '/' exp_name '/FilteredData3d'])
-        save([exp_path '/' exp_name '/FilteredData3d/Data3d.mat'],'coords3dall')
+        save([exp_path '/' exp_name '/FilteredData3d/Data3d.mat'],'coords3d')
     else
     
     answer = questdlg('Filtered data has been previously saved, do you want to overwrite it?','Save new filtered data','Yes','No','Yes');
@@ -121,7 +125,7 @@ if whichfilter
         switch answer
 
             case 'Yes'
-                save([exp_path '/' exp_name '/FilteredData3d/Data3d.mat'],'coords3dall')
+                save([exp_path '/' exp_name '/FilteredData3d/Data3d.mat'],'coords3d')
                 disp('Saved the new results')
 
             case 'No'

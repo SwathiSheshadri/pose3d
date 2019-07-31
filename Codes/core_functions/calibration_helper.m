@@ -143,8 +143,8 @@ if ~exist([exp_path '/' 'CalibSessionFiles/'],'dir')
             stereoCameraCalibrator(folder1, folder2, squareSize);
             CreateStruct.Interpreter = 'tex';
             CreateStruct.WindowStyle = 'non-modal';
-            h = msgbox({'\fontsize{16}The main program is paused for Stereo Camera Calibrator GUI to run (you can keep this messsge box open and follow the below steps in the GUI)';''; '1. Click \bfcalibrate';'';...
-                        '\rm2. From save menu in the GUI, \bfselect save session as';''; ['\rm3. Save session as calibrationSession.mat in folder \bf ./' exp_path '/' 'CalibSessionFiles/PrimarySecondary' num2str(icams) '/'];'';'\rm4. Close GUI & \bfpress any key \rmto continue';'';'Tip : If reprojection errors are high for some calibration images, drag to select outliers, right click on data browser to remove outliers and recalibrate';'';},'Important steps to do next',CreateStruct);
+            h = msgbox({'\fontsize{16}The main program is paused for Stereo Camera Calibrator GUI to run \color{blue}(move this messsge box to a side leave it open and follow the below steps in the GUI)';''; '\color{black}1. Click \bfcalibrate';'';...
+                        '\rm2. From save menu in the GUI, \bfselect save session as';''; ['\rm3. Save session as calibrationSession.mat in folder \bf ./' exp_path '/' 'CalibSessionFiles/PrimarySecondary' num2str(icams) '/'];'';'\rm4. Close GUI & \bfpress any key \rmto continue';'';'Tip : If reprojection errors are high for some calibration images, drag to select outliers, right click on detected outliers to remove them and recalibrate';'';},'Important steps to do next',CreateStruct);
 
         catch
             flag_mis = 1;
@@ -172,8 +172,8 @@ else
         switch answer
             case 'Proceed'
                 for icams = 1:ncams-1
-                    if ~exist([exp_path '/' 'CalibSessionFiles/PrimarySecondary' num2str(icams) '/CalibrationSession.mat'],'file')
-                        uiwait(msgbox('Redo Stereo Camera Calibration and save session files as CalibrationSession.mat','Problem detected'))
+                    if ~exist([exp_path '/' 'CalibSessionFiles/PrimarySecondary' num2str(icams) '/calibrationSession.mat'],'file')
+                        uiwait(msgbox('Redo Stereo Camera Calibration and save session files as calibrationSession.mat','Problem detected'))
                         flag_mis = 1;
                         return
                     end
@@ -190,8 +190,8 @@ else
                         stereoCameraCalibrator(folder1, folder2, squareSize);
                         CreateStruct.Interpreter = 'tex';
                         CreateStruct.WindowStyle = 'non-modal';
-                         h = msgbox({'\fontsize{16}The main program is paused for Stereo Camera Calibrator GUI to run (you can keep this messsge box open and follow the below steps in the GUI)';''; '1. Click \bfcalibrate';'';...
-                        '\rm2. From save menu in the GUI, \bfselect save session as';''; ['\rm3. Save session as calibrationSession.mat in folder \bf ./' exp_path '/' 'CalibSessionFiles/PrimarySecondary' num2str(icams) '/'];'';'\rm4. Close GUI & \bfpress any key \rmto continue';'';'Tip : If reprojection errors are high for some calibration images, drag to select outliers, right click on data browser to remove outliers and recalibrate';'';},'Important steps to do next',CreateStruct);
+                         h = msgbox({'\fontsize{16}The main program is paused for Stereo Camera Calibrator GUI to run \color{blue}(move this messsge box to a side leave it open and follow the below steps in the GUI)';''; '\color{black}1. Click \bfcalibrate';'';...
+                        '\rm2. From save menu in the GUI, \bfselect save session as';''; ['\rm3. Save session as calibrationSession.mat in folder \bf ./' exp_path '/' 'CalibSessionFiles/PrimarySecondary' num2str(icams) '/'];'';'\rm4. Close GUI & \bfpress any key \rmto continue';'';'Tip : If reprojection errors are high for some calibration images, drag to select outliers, right click on detected outliers to remove them and recalibrate';'';},'Important steps to do next',CreateStruct);
 
                     catch
                         flag_mis = 1;

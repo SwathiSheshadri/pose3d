@@ -24,7 +24,7 @@ While DLC provides excellent tools for 2D tracking, scope for development of 3D 
 
 ## Running demos
 1) Download the repository and from the main folder of the repository run **./Codes/demo_DLC2d.m** to perform 3D reconstruction of corners of a Rubik's cube tracked in 2D using DLC. Since all the pre-processing steps have been already done for the demo, click proceed when message boxes pop-up.
-2) Similiar to the first demo from the main folder of the repository, run **./Codes/demo_other2d.m** to perform 3D reconstruction of corners of a Rubik's cube tracked in 2D using data from any other 2D tracking software. Here we mimick other software by manual 2D tracking.<br/>
+2) Similiar to the first demo from the main folder of the repository, run **./Codes/demo_other2d.m** to perform 3D reconstruction of corners of a Rubik's cube tracked in 2D using any other 2D tracking software. Here we mimick other software by manual 2D tracking.<br/>
 
 ## Using pose3d for your data
 Follow the below steps to perform 3D reconstruction of your 2D tracked data. <br/>
@@ -42,14 +42,14 @@ Note : If you are using DLC for 2D tracking and have saved the csv files after a
 In-built functions of Matlab, Computer Vision Toolbox. Code has been tested on MATLAB 2018b across linux, MAC and Windows operating systems.<br/>
 
 ## Troubleshooting 
-1) Mismatch between 2D tracked csv file and calibration files. <br/>
+1) Mismatch between 2D tracked csv and calibration files. <br/>
 -- In this case there will be failure in 3D reconstruction since data from one camera will be transformed using camera matrix of a different camera.  To avoid this, ensure that the order of 2D data and calibration files is maintained across the config file. Refer to the comments in the template config file for more details.<br/>
 2) Poor estimation of the intrinsic and extrinsic parameters.<br/>
 -- To avoid this case, present the checker board in different angles and record it in full view from both the primary and secondary cameras. If you are making calibration videos, ensure that the whole checkboard is clearly visible in most if not all frames. In addition, check the re-projection errors in the stereo camera calibration GUI to remove outliers and recalibrate for better results. <br/>
 3) Camera movement between recording calibration videos and behavior. <br/>
 -- Ensure that your cameras are fixed between recording sessions. Everytime you suspect that the cameras have moved record new calibration videos. <br/>
 4) Positioning of the cameras is not optimal or number of cameras is not sufficient for the behavior of interest. <br/>
--- For every feature of interest you want to track, you must be able to perform 2D tracking reliably from atleast two cameras. Ensure to have sufficent number of cameras to track the behavior of interest and position them such that their centers are not along a single a line or a plane. <br/>
+-- For every feature of interest you want to track, you must be able to perform 2D tracking reliably from atleast two cameras. Ensure to have sufficent number of cameras to track the behavior of interest and position them such that their centers are not along a single line or a plane. <br/>
 5) Our toolbox is designed to work with [stereoCameraCalibrator](https://www.mathworks.com/help/vision/ug/stereo-camera-calibrator-app.html) GUI in MATLAB. The GUI requires simulataneously acquired images from the two cameras to have the same name and saved it different folders. In case you have acquired calibration videos, all you need ot do is edit the config file to enter the path and name of the calibration videos and pose3d automatically does the rest for you. In case you have acquired images from calibration, please ensure that the simultaneously acquired images have same names and are saved in different folders. <br/>
 
 

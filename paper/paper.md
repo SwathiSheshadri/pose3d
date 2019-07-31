@@ -1,5 +1,5 @@
 ---
-title: '3D reconstrution toolbox for behavior tracked with multiple cameras'
+title: '3D reconstruction toolbox for behavior tracked with multiple cameras'
 tags:
   - 3D reconstruction
   - Multiple cameras
@@ -28,7 +28,8 @@ bibliography: paper.bib
 ---
 
 # Summary
-Computer vision based behavior tracking in lab environments received a boost recently owing largely to DeepLabCut (DLC) (@Mathis2018) : a markerless tracking software. DLC takes leverage of advanced techniques in deep learning to make automated tracking possible with moderate amount of computational power that even consumer-grade graphics cards offer. This is achieved by using a deep convolutional neural network, ResNet(@He2016) pre-trained on ImageNet database(@Imagenet) for object recognition task and retraining it for tracking task. 
+Markerless tracking is a crucial experimental requirement for behavioral studies conducted across species in different enviroments. A recently developed toolbox called DeepLabCut (DLC) (@Mathis2018) leverages neural network based computer vision to make precise markerless tracking possible for scientific experiments. DLC uses a deep convolutional neural network, ResNet(@He2016) pre-trained on ImageNet database(@Imagenet) for object recognition task and retraining it for tracking task. 
+
 While DLC provides excellent tools for 2D tracking, there is scope for development in 3D reconstruction tools particularly when 2D tracking is made from more than two cameras. Anipose (@Anipose), is an available option and is based on OpenCV toolbox in Python. To our knowledge, Matlab currently does not have a similar toolbox to perform 3D reconstruction of 2D points tracked from 'n' cameras. However, Matlab (The MathWorks Inc., Natick, Massachusetts) supports camera calibration, an essential step for 3D reconstruction, with extremely user-friendly graphical user interfaces (GUIs) providing visual feedback to help detect and eliminate errors during the calibration procedure.
 recon3D is a toolbox in Matlab for 3D reconstruction of features tracked in 2D using DLC or any other tracking software. The core of this toolbox is a one-shot implementation of triangulation for 3D reconstruction applicable to n cameras. It includes two main modes of 3D reconstruction to be selected based on the design experimental design. The first mode uses, 2D data from all n cameras that are used to track the feature in 2D while the second mode selects the best camera pair for every time point and feature of interest. By default we recommend using the ‘all’ mode, however, only if by design only 2 cameras can detect a feature at any given time point we recommend switching to the ‘best-pair’ mode.
 Furthermore, validation of the approach is provided in example implementations show-casing the toolkit capabilities. Tools to perform preprocessing steps such as image undistortion, automatic selection of cameras containing well tracked 2D features and applying temporal filters to smooth the tracked 2D trajectories are included in recon3D. 

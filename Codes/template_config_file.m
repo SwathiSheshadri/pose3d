@@ -110,7 +110,7 @@ calibvideos_primary = [{'calibvideospath../calibPrimarywithsec1.avi'};...
 %simultaneously with primary camera
 % this path can be anywhere that is readable by your user on the computer
 calibvideos_secondary = [{'calibvideospath../calib_sec1.avi'};...
-                         {'calibvideospath../calib_sec1.avi'};...
+                         {'calibvideospath../calib_sec2.avi'};...
                          {'calibvideospath../calib_sec3.avi'};...
                          {'calibvideospath../calib_sec4.avi'};]; %path to your calibration video recorded from secondary camera 1 with primary
 
@@ -131,8 +131,13 @@ folderwithpngs = '/Users/username/CalibFiles/';
 %% You are now done with fill up the main parameters!!! edit below for post-processing
 % (Default setting we use are below.)
 % Do you want to undistort 2D coordinates?
-% If your videos are already undistorted or if have low distortion lens set this to 0
-run_undistort = 1; %1: run undistort, 0: do not undistort
+% If your lens have high distortion set this to 1
+run_undistort = 0; %1: run undistort, 0: do not undistort
+
+% plots 3D reconstructed data (if you have really long recordings set nskip to higher 
+% values so only a few example frames are vizualized while saving everything)
+plotresults = 1; %plots resulting 3D coordinates at recorded fps
+nskip = 1; %min value nskip can take is 1, increase this when you have long recording (plots results from every nskip frames)
 
 % the DLC based likelihood value threshold
 llh_thresh = 0.9; %Can choose values between 0 and 1; 
@@ -144,12 +149,6 @@ drawline = 0; %0 : skeleton will not be drawn, Eg : [ 1 2; 2 3;], draws lines be
 whichfilter = 2; % 0: No filter; 1: moving average; 2:median filter (if you observe jumps in your feature trajectories try 2 or 1)
 npoints = 5;%number of data points to use for filter (if you choose 1 or 2 for which filter this value has to be filled)               
 
-
-% plots 3D reconstructed data (if you have really long recordings set nskip to higher 
-% values so check only a few examples from the reconstruction and save results)
-plotresults = 1; %plots resulting 3D coordinates at recorded fps
-nskip = 1; %min value nskip can take is 1, increase this when you have long recording (plots results from every nskip frames)
-
 nframes = rec_time*fps; %nothing to edit here onwards
 
 %% Some checks to make pose3d user-friendly
@@ -160,10 +159,14 @@ if ((length(unique(secondary2D_datafullpath))) ~= ncams-1 || (length(unique(prim
    uiwait(msgbox('Mismatch between number of cameras and number of 2D tracked data csv files detected. Check if all file names are unique and are as many as the number of cameras and re-run main program to proceed.'))
 end
 
-% Check if .csv files are provided for 2D tracked data 
-temp = secondary2D_datafullpath;
-temp{end+1} = primary2D_datafullpath;
-if(~all(arrayfun(@(x,y)strcmp(temp{x}(end-2:end),'csv'),1:ncams)))
+% Check if .csv files are provided for 2D tracked data (secondary cameras)
+if(~all(arrayfun(@(x,y)strcmp(secondary2D_datafullpath{x}(end-2:end),'csv'),1:ncams-1)))
+    flag_mis = 1;
+    uiwait(msgbox('csv file expected by pose3d. Please enter 2D tracked data in csv format and re-run main program to proceed.'))
+end
+
+% Check if .csv files are provided for 2D tracked data primary camera
+if~(strcmp(primary2D_datafullpath{1}(end-2:end),'csv'))
     flag_mis = 1;
     uiwait(msgbox('csv file expected by pose3d. Please enter 2D tracked data in csv format and re-run main program to proceed.'))
 end
@@ -171,7 +174,7 @@ end
 
 %Check if there are the right number of unique calibration videos
 if calib_videos
-    if ((length(unique(calibvideos_primary))) ~= ncams-1 || (length(unique(calibvideos_secondary)) ~= ncams-1))
+    if ((length(unique(calibvideos_primary))) ~= (ncams-1) || (length(unique(calibvideos_secondary))) ~= (ncams-1))
        flag_mis = 1;
        uiwait(msgbox('Check if all calibration file names are unique and are included for every primary-secondary pair and re-run main program to proceed.'))
     end

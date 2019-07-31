@@ -24,7 +24,7 @@ if ~exist([exp_path '/' exp_name '/Data2d/'],'dir')
         copyfile(secondary2D_datafullpath{icams},dest_fold)
     end
 else
-    answer = questdlg('Data2d folder exists, do you want to proceed to 3D reconstruction?','Copy 2D data helper','Proceed','Copy new','Proceed');
+    answer = questdlg(['Data2d folder exists at ' exp_path '/' exp_name ' ,do you want to proceed to 3D reconstruction?'],'Copy 2D data helper','Proceed','Copy new csv files','Proceed');
         % Handle response
         switch answer
 
@@ -40,7 +40,7 @@ else
                 end
                 disp('Proceeding to calibration')
 
-            case 'Copy new'
+            case 'Copy new csv files'
                 rmdir([exp_path '/' exp_name '/Data2d/'],'s')
                 if exist([exp_path '/' exp_name '/UndistortedData2d/'],'dir')
                     rmdir([exp_path '/' exp_name '/UndistortedData2d/'],'s')
@@ -55,7 +55,7 @@ else
                 end
         end        
 end
-disp('2D tracked csv files exist in corresponding folders for recon3D')
+disp('2D tracked csv files exist in corresponding folders for pose3d')
 
 %% data load with undistortion if requested in config file
 fprintf('Loading calibration files and undistorting 2D coordinates (this might take awhile the first time you run this code for an experiment) \n ...\n')
@@ -225,7 +225,7 @@ end
 
 end
 
-%A bit of code modularization & check for recon3D appropriate data 
+%A bit of code modularization & check for pose3d appropriate data 
 %Loading DLC 2D tracked data
 function [data2d,data2dllh,flag_mis] = load_dlcdata(fullfilename,nframes,nfeatures,flag_mis)
     data2d = importdata(fullfilename);

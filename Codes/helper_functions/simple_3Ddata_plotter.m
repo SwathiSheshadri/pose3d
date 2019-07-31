@@ -55,10 +55,10 @@ if plotresults
 
     colorclass = colormap(jet); %jet is default in DLC 
     color_map_self=colorclass(1:nfeatures:64,:);
-
+    tic
     for t =1:nskip:size(coords3d,1)
 
-        temp = reshape(coords3d(t,:),3,nfeatures);
+        temp = reshape(coords3d(t,:,1),3,nfeatures);
         scatter3(temp(1,:),temp(2,:),temp(3,:),250*ones(1,nfeatures),color_map_self(1:nfeatures,:),'filled');  
         hold on
         if ~any(drawline==0)
@@ -76,6 +76,20 @@ if plotresults
         set(gca,'xtick',[],'ytick',[],'ztick',[],'view',[-10.0500   30.6124],'xlim',[xmin xmax],'ylim',[ymin ymax],'zlim',[zmin zmax],'Zdir', 'reverse') %change view and axis limits to fit your data
 
         pause(nskip/fps)  
+        
+        
+        if toc > 60 %after every 60 seconds prompts user to stop watching movie
+            answer = questdlg('Stop watching movie and save all results?','Save results?','Yes, save results', ...
+            'No, continue watching','Yes, save results');
+            % Handle response
+            switch answer
+                case 'Yes, save results'
+                    break
+                case 'No, continue watching'
+                    tic
+                    continue
+            end
+        end
 
     end
 end
@@ -86,7 +100,7 @@ if whichfilter
         save([exp_path '/' exp_name '/FilteredData3d/Data3d.mat'],'coords3d')
     else
     
-    answer = questdlg('Filtered data has been previously saved, do you want to overwrite it?','Save new filtered data','Yes','No','Yes');
+    answer = questdlg('Filtered data has been previously saved, do you want to save again?','Save','Yes','No','Yes');
         % Handle response
         switch answer
 

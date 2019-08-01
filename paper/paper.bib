@@ -1,8 +1,21 @@
-@techreport{Mathis2018,
-  title={DeepLabCut: markerless pose estimation of user-defined body parts with deep learning},
-  author={Mathis, Alexander and Mamidanna, Pranav and Cury, Kevin M and Abe, Taiga and Murthy, Venkatesh N and Mathis, Mackenzie Weygandt and Bethge, Matthias},
-  year={2018},
-  institution={Nature Publishing Group}
+@article {Mathis2018,
+  title = {DeepLabCut: markerless pose estimation of user-defined body parts with deep learning},
+  journal = {Nature Neuroscience},
+  volume = {21},
+  year = {2018},
+  pages = {1281-1289},
+  abstract = {Quantifying behavior is crucial for many applications in neuroscience. Videography provides easy methods for the observation and recording of animal behavior in diverse settings, yet extracting particular aspects of a behavior for further analysis can be highly time consuming. In motor control studies, humans or other animals are often marked with reflective markers to assist with computer-based tracking, but markers are intrusive, and the number and location of the markers must be determined a priori. Here we present an efficient method for markerless pose estimation based on transfer learning with deep neural networks that achieves excellent results with minimal training data. We demonstrate the versatility of this framework by tracking various body parts in multiple species across a broad collection of behaviors. Remarkably, even when only a small number of frames are labeled (~200), the algorithm achieves excellent tracking performance on test frames that is comparable to human accuracy.},
+  url = {https://www.nature.com/articles/s41593-018-0209-y},
+  author = {Mathis, Alexander and Pranav Mamidanna and Kevin M. Cury and Taiga Abe and Venkatesh N. Murthy and Mathis, Mackenzie Weygandt and Matthias Bethge}
+}
+
+@article {Nath2019,
+  title = {Using DeepLabCut for 3D markerless pose estimation across species and behaviors},
+  journal = {Nature Protocols},
+  year = {2019},
+  abstract = {Noninvasive behavioral tracking of animals during experiments is critical to many scientific pursuits. Extracting the poses of animals without using markers is often essential to measuring behavioral effects in biomechanics, genetics, ethology, and neuroscience. However, extracting detailed poses without markers in dynamically changing backgrounds has been challenging. We recently introduced an open-source toolbox called DeepLabCut that builds on a state-of-the-art human pose-estimation algorithm to allow a user to train a deep neural network with limited training data to precisely track user-defined features that match human labeling accuracy. Here, we provide an updated toolbox, developed as a Python package, that includes new features such as graphical user interfaces (GUIs), performance improvements, and active-learning-based network refinement. We provide a step-by-step procedure for using DeepLabCut that guides the user in creating a tailored, reusable analysis pipeline with a graphical processing unit (GPU) in 1{\textendash}12 h (depending on frame size). Additionally, we provide Docker environments and Jupyter Notebooks that can be run on cloud resources such as Google Colaboratory.},
+  url = {https://www.nature.com/articles/s41596-019-0176-0},
+  author = {Tanmay Nath and Mathis, Alexander and An Chi Chen and Mathias Bethge and Mathis, Mackenzie Weygandt}
 }
 
 @inproceedings{He2016,
@@ -28,4 +41,10 @@
   publisher = {GitHub},
   journal = {GitHub repository},
   howpublished = {\url{https://github.com/lambdaloop/anipose}},
+}
+
+@misc{opencv,
+  title={Open Source Computer Vision Library},
+  year={2015},
+  howpublished = {\url{https://opencv.org}}
 }

@@ -126,9 +126,15 @@ end
 % Check if .csv files are provided for 2D tracked data 
 if(~all(arrayfun(@(x,y)strcmp(secondary2D_datafullpath{x}(end-2:end),'csv'),1:4)))
     flag_mis = 1;
-    uiwait(msgbox('csv file expected by pose3d. Please enter 2D tracked data in csv format and re-run main program.'))
+    uiwait(msgbox('csv file expected by pose3d. Enter 2D tracked data in csv format and re-run main program.'))
+end
+
+if ~exist('./DemoData','dir')
+    flag_mis =1;
+    uiwait(msgbox('Run demo scripts from main folder of repository','Problem detected'))
 end
 
 if ~exist('flag_mis','var')
     flag_mis = 0; %Nothing to flag, checks passed
 end
+

@@ -101,7 +101,7 @@ frames_to_use = 25;
 
 % Do you want to undistort 2D coordinates?
 % If your videos are already undistorted or if have low distortion lens set this to 0
-run_undistort = 0; %1: run undistort, 0: do not undistort
+run_undistort = 1; %1: run undistort, 0: do not undistort
 
 % the DLC based likelihood value threshold
 llh_thresh = 0.9; %Can choose values between 0 and 1; 
@@ -128,6 +128,11 @@ end
 if(~all(arrayfun(@(x,y)strcmp(secondary2D_datafullpath{x}(end-2:end),'csv'),1:4)))
     flag_mis = 1;
     uiwait(msgbox('csv file expected by pose3d. Please enter 2D tracked data in csv format and re-run main program.'))
+end
+
+if ~exist('./DemoData','dir')
+    flag_mis =1;
+    uiwait(msgbox('Run demo scripts from main folder of repository','Problem detected'))
 end
 
 if ~exist('flag_mis','var')

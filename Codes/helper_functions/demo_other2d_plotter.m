@@ -136,7 +136,7 @@ if whichfilter
 end
 
 else
-    uiwait(msgbox('2D data required for recon3D is missing. Please checked if its saved properly.Try re-running main function)','Problem detected'))
+    
 end
 
     

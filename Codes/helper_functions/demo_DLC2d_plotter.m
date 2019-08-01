@@ -131,13 +131,8 @@ drawline = [ 1 2; 2 3; 3 4; 4 1; 5 6;6 7;...
 
 %Movies recorded from 5 cameras saved as videos.mat file for demo 
 
-if ~exist(['./' exp_path '/' exp_name '/videosdata/'],'dir')
-    uiwait(msgbox('Videodata missing in Demo_Experiments folder for this experiment'))
-    return
-end  
-
 for icams = 1:ncams
-    load(['./' exp_path '/' exp_name '/videosdata/movie' num2str(icams) '.mat'])
+    load(['./DemoData/videosdata_DLC2d/movie' num2str(icams) '.mat'])
 end
 
 str = sprintf(['reconstructed edge length = %0.2f ' char(177) ' %0.2f mm over %d frames'],nanmean(reconall(:)),nanstd(reconall(:)),nframes);
@@ -200,7 +195,7 @@ if whichfilter
 end
 
 else
-    uiwait(msgbox('2D data required for recon3D is missing. Please checked if its saved properly.Try re-running main function)','Problem detected'))
+    
 end
 
     

@@ -1,7 +1,7 @@
 # 3D reconstrution toolbox for behavior tracked with multiple cameras 
 
-## pose3d?
-pose3d is implemented in Matlab for 3D reconstruction of features tracked in 2D using DLC or any other tracking software. It provides a semi-automated 3D reconstruction workflow that takes users through the process of camera calibration, undistortion, triangulation as well as post processing steps such as filtering to reduce outliers. In addition to providing an easy to use workflow, the key component in our implementation is the ‘n’ camera triangulation function for 3D reconstruction available for users in three modes. The first mode of triangulation is referred to as ‘all’ and uses 2D data from all ‘n’ cameras that are used to track the feature in 2D. The second mode is referred to as ‘avg’ and performs triangulation over all pairs of cameras in the setup and provides the average over all pairs as the result. The third mode is referred to as ‘best-pair’ and selects the best camera pair for every time point and feature of interest for triangulation.
+## What is pose3d?
+pose3d is implemented in Matlab for 3D reconstruction of features tracked in 2D using DLC or any other tracking software. It provides a semi-automated 3D reconstruction workflow that takes users through the process of camera calibration, undistortion, triangulation as well as post processing steps such as filtering to reduce outliers. In addition to providing an easy to use workflow, the key component in our implementation is the ‘n’ camera triangulation function which allows users to select the best pair of cameras for every feature and time point from the ‘n’ cameras using an automated thresholding criterion or use 2D tracked data from all cameras for 3D reconstruction.
 
 ## Table of Contents
   * [Why pose3d?](#Why-pose3d)
@@ -15,12 +15,10 @@ pose3d is implemented in Matlab for 3D reconstruction of features tracked in 2D 
   * [Acknowledgements](#acknowledgements)
 
 ## Why pose3d?
-Behavior tracking in lab environments was recently revolutionized by [DeepLabCut (DLC)](https://github.com/AlexEMG/DeepLabCut): a markerless tracking software.
-While DLC provides excellent tools for 2D tracking, scope for development of 3D reconstruction workflows especially for 2D behavior tracking made from more than two cameras still exists. [Anipose](https://github.com/lambdaloop/anipose) and [DLC](https://www.nature.com/articles/s41596-019-0176-0) offer implementations in python using OpenCV package in Python for camera calibration and 3D reconstruction. Camera calibration is a necessary step for 3D reconstruction in which checkboard images acquired from a camera are used to estimate its lens properties such as focal length and principal point. When checker board images are acquired simultaneous from 2 cameras, the position of one camera with respect to the other can also be obtained. In comparison to openCV, Matlab (The MathWorks Inc., Natick, Massachusetts), has a very user-friendly and graphical user interface (GUI) based camera calibration routine which makes camera calibration much easier to perform. pose3d takes advantage of this function in Matlab and provides a toolbox for 3D reconstruction of features tracked using DLC or any other 2D tracking software as illustrated in Figure 1. Given the popularity of Matlab in academia, we believe this toolbox will help make 3D reconstruction of tracked 2D behavior easier for researchers to use.<br/>
+Markerless tracking is a crucial experimental requirement for behavioral studies conducted across species in different enviroments. A recently developed toolbox called [DeepLabCut (DLC)](https://github.com/AlexEMG/DeepLabCut) leverages Artificial Neural Network (ANN) based computer vision to make precise markerless tracking possible for scientific experiments. To track complex behaviors such as grasping with object interaction in 3D as illustrated in Figure 1, experimental setups with multiple cameras have to be developed. Development of such systems can largely benefit from a robust and easy to use camera calibration and 3D reconstruction toolbox. To this end, we developed pose3d, a semi-automated 3D reconstruction toolbox in Matlab (The MathWorks Inc., Natick, Massachusetts). Given the popularity of Matlab in academia, we believe this toolbox will help make 3D reconstruction of tracked 2D behavior easier for researchers to use.<br/>
 
 ![](ExampleGrasping_2Dto3D_whitebg.gif)<br/>
 *Figure 1: Reconstruction in 3D of grasping behavior tracked in 2D using DeepLabCut*
-
 
 ## Running demos
 1) Download the repository and from the main folder of the repository run **./Codes/demo_DLC2d.m** to perform 3D reconstruction of corners of a Rubik's cube tracked in 2D using DLC. Since all the pre-processing steps have been already done for the demo, click proceed when message boxes pop-up.
@@ -52,7 +50,6 @@ In-built functions of Matlab, Computer Vision Toolbox. Code has been tested on M
 -- For every feature of interest you want to track, you must be able to perform 2D tracking reliably from atleast two cameras. Ensure to have sufficent number of cameras to track the behavior of interest and position them such that their centers are not along a single line or a plane. <br/>
 5) Our toolbox is designed to work with [stereoCameraCalibrator](https://www.mathworks.com/help/vision/ug/stereo-camera-calibrator-app.html) GUI in MATLAB. The GUI requires simulataneously acquired images from the two cameras to have the same name and saved it different folders. In case you have acquired calibration videos, all you need ot do is edit the config file to enter the path and name of the calibration videos and pose3d automatically does the rest for you. In case you have acquired images from calibration, please ensure that the simultaneously acquired images have same names and are saved in different folders. <br/>
 
-
 ## Installation
 To install this toolbox, add all contents of this repository to Matlab path. 
 
@@ -60,5 +57,6 @@ To install this toolbox, add all contents of this repository to Matlab path.
 For questions on the toolbox and citation please contact us at swathishesh@gmail.com or HScherberger@dpz.eu
 
 ## Acknowledgements
-We are very thankful to Mackenzie Mathis and Alexandar Mathis for their help in getting us going with using vision based tracking with DLC. Discussions with several colleagues at the German Primate Center including Andrej Fillipow, Michael Berger, Sebastian Mueller and Daniela Buchwald were very useful for the development of our tracking experimental setup. Thanks also to Viktorija Schek for testing out some of our implementations. 
+We are very thankful to Mackenzie Mathis and Alexandar Mathis for their help in getting us going with using vision based tracking with DLC. Discussions with several colleagues at the German Primate Center including Andrej Fillipow, Michael Berger, Sebastian Mueller, Attila Trunk and Daniela Buchwald were very useful for the development of our tracking experimental setup. Thanks also to Viktorija Schek for testing out some of our implementations. 
+Our implementation in Matlab was inspired by [Anipose](https://github.com/lambdaloop/anipose) - a python toolbox for 3D reconstruction. 
 

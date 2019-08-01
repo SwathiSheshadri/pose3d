@@ -12,53 +12,8 @@
 
 
 if ~flag_mis == 1
-%% To automatically move 2D tracked data into the folder structure necessary for this toolbox
-
-if ~exist([exp_path '/' exp_name '/Data2d/'],'dir')
-    dest_fold = [exp_path '/' exp_name '/Data2d/Primary/'];
-    mkdir(dest_fold)
-    copyfile(primary2D_datafullpath{1},dest_fold)
-    for icams = 1:ncams-1
-        dest_fold = [exp_path '/' exp_name '/Data2d/Secondary' num2str(icams) '/'];
-        mkdir(dest_fold)
-        copyfile(secondary2D_datafullpath{icams},dest_fold)
-    end
-else
-    answer = questdlg(['Data2d folder exists at ' exp_path '/' exp_name ' ,do you want to proceed to 3D reconstruction?'],'Copy 2D data helper','Proceed','Copy new csv files','Proceed');
-        % Handle response
-        switch answer
-
-            case 'Proceed'
-                for icams = 1:ncams-1
-                    dest_fold = [exp_path '/' exp_name '/Data2d/Secondary' num2str(icams) '/'];
-                    d = dir(dest_fold);
-                    if((d(1).name== '.') && length(d)==2)
-                        flag_mis = 1; 
-                        uiwait(msgbox(sprintf(['Missing files in ' exp_path '/' exp_name '/Data2d/Secondary%d. Re-run main function and choose to copy the 2D data'],icams),'Problem detected'))
-                        return
-                    end
-                end
-                disp('Proceeding to calibration')
-
-            case 'Copy new csv files'
-                rmdir([exp_path '/' exp_name '/Data2d/'],'s')
-                if exist([exp_path '/' exp_name '/UndistortedData2d/'],'dir')
-                    rmdir([exp_path '/' exp_name '/UndistortedData2d/'],'s')
-                end
-                dest_fold = [exp_path '/' exp_name '/Data2d/Primary/'];
-                mkdir(dest_fold)
-                copyfile(primary2D_datafullpath{1},dest_fold)
-                for icams = 1:ncams-1
-                    dest_fold = [exp_path '/' exp_name '/Data2d/Secondary' num2str(icams) '/'];
-                    mkdir(dest_fold)
-                    copyfile(secondary2D_datafullpath{icams},dest_fold)
-                end
-        end        
-end
-disp('2D tracked csv files exist in corresponding folders for pose3d')
-
 %% data load with undistortion if requested in config file
-fprintf('Loading calibration files and undistorting 2D coordinates (this might take awhile the first time you run this code for an experiment) \n ...\n')
+disp('Loading calibration files and 2D tracked coordinates')
 stereoParams = cell(ncams-1,1);
 cam_mat_all = nan(3,4,ncams);
 DataAll = nan(nframes,nfeatures*2,ncams) ;
@@ -78,21 +33,23 @@ for icams = 1:ncams-1 % since calibration is done pairwise, primary camera param
     %'Loading the stereoCalib file for primary and secondary camera #' num2str(i)
     load([ exp_path '/CalibSessionFiles/PrimarySecondary' num2str(icams) '/calibrationSession.mat']);
     stereoParams = calibrationSession.CameraParameters;
+    
+    if(isempty(stereoParams.CameraParameters2.IntrinsicMatrix))
+        flag_mis = 1;
+        uiwait(msgbox('Maybe you close StereoCameraCalibrator too soon! Please check if you the saved calibrationSession.mat files are not empty','Problem detected'))
+        return
+    end
+    
     cam_mat =[stereoParams.RotationOfCamera2; stereoParams.TranslationOfCamera2]*stereoParams.CameraParameters2.IntrinsicMatrix; %setting secondary camera characteristics
     cam_mat_all(:,:,icams) = cam_mat';
     
     %Loading 2d data csv folder from DLC for secondary camera # num2str(i)
     if ~run_undistort               
-        csvname = dir([exp_path '/' exp_name '/Data2d/Secondary' num2str(icams)  '/*.csv']);
-        if  isempty(csvname) %there has to be only one csv file in this directory, dir function returns '.','..' first and then the files contained
-            flag_mis = 1;
-            uiwait(msgbox(sprintf(['Missing required number of csv files in' exp_path '/' exp_name '/Data2d/Secondary%d'],icams),'Problem detected'))
-            return
-        end
+        
         if usingdlc
-            [data2d,data2dllh,flag_mis] = load_dlcdata([csvname.folder '/' csvname.name],nframes,nfeatures,flag_mis);
+            [data2d,data2dllh,flag_mis] = load_dlcdata(secondary2D_datafullpath{icams},nframes,nfeatures,flag_mis);
         else
-            [data2d,flag_mis] = load_otherdata([csvname.folder '/' csvname.name],nframes,nfeatures,flag_mis);
+            [data2d,flag_mis] = load_otherdata(secondary2D_datafullpath{icams},nframes,nfeatures,flag_mis);
         end
         if flag_mis == 1 %case when the load_dlcdata function sets flag to 1
             uiwait(msgbox(['Number of data entries in 2D tracked csv file at ' csvname.folder 'does not match specified duration of recording and frame rate in config file. Check and re-run main function'],'Problem detected'))
@@ -101,17 +58,13 @@ for icams = 1:ncams-1 % since calibration is done pairwise, primary camera param
     else
     
         if ~exist([exp_path '/' exp_name '/UndistortedData2d/Secondary' num2str(icams) '/data2d.mat'],'file') 
+            disp('Undistortion takes a long while...') 
+            disp(['Starting undistortion on Secondary' num2str(icams) ])
             mkdir([exp_path '/' exp_name '/UndistortedData2d/Secondary' num2str(icams)])
-            csvname = dir([exp_path '/' exp_name '/Data2d/Secondary' num2str(icams)  '/*.csv']);
-            if  isempty(csvname) %there has to be only one csv file in this directory
-                flag_mis = 1;
-                uiwait(msgbox(sprintf(['Missing required number of csv files in' exp_path '/' exp_name '/Data2d/Secondary%d'],icams),'Problem detected'))
-                return
-            end
             if usingdlc
-                [data2d,data2dllh,flag_mis] = load_dlcdata([csvname.folder '/' csvname.name],nframes,nfeatures,flag_mis);
+                [data2d,data2dllh,flag_mis] = load_dlcdata(secondary2D_datafullpath{icams},nframes,nfeatures,flag_mis);
             else
-                [data2d,flag_mis] = load_otherdata([csvname.folder '/' csvname.name],nframes,nfeatures,flag_mis);
+                [data2d,flag_mis] = load_otherdata(secondary2D_datafullpath{icams},nframes,nfeatures,flag_mis);
             end
             if flag_mis == 1 %case when the load_dlcdata function sets flag to 1
                 uiwait(msgbox(['Number of data entries in 2D tracked csv file at ' csvname.folder 'does not match specified duration of recording and frame rate in config file. Check and re-run main function'],'Problem detected'))
@@ -123,15 +76,21 @@ for icams = 1:ncams-1 % since calibration is done pairwise, primary camera param
                 data2d = undistortPoints(temp,stereoParams.CameraParameters2);
             else
                 isnan_temp = isnan(temp);
-                data2d = nan(size(temp,1),size(temp,2));
-                data2d(~isnantemp) = undistortPoints(temp(~isnantemp),stereoParams.CameraParameters2);
+                temp(isnan_temp) =  0; 
+                data2d = undistortPoints(temp,stereoParams.CameraParameters2);
+                data2d(isnan_temp) = NaN;
             end
             temp = reshape(data2d,nframes,nfeatures,2);
             data2d = permute(temp,[1 3 2]);
             data2d = data2d(:,:);
-            save([exp_path '/' exp_name '/UndistortedData2d/Secondary' num2str(icams) '/data2d.mat'],'data2d','data2dllh')
+            if usingdlc
+                disp(['Saving undistorted 2D data for primary camera at ' exp_path '/' exp_name ' /UndistortedData2d/Secondary' num2str(icams)])
+                save([exp_path '/' exp_name '/UndistortedData2d/Secondary' num2str(icams) '/data2d.mat'],'data2d','data2dllh')                    
+            else
+                disp(['Saving undistorted 2D data for primary camera at ' exp_path '/' exp_name ' /UndistortedData2d/Secondary' num2str(icams)])
+                save([exp_path '/' exp_name '/UndistortedData2d/Secondary' num2str(icams) '/data2d.mat'],'data2d')
+            end
         else
-            
             %incase you have already run this code before then the saved
             %undistorted data is directly loaded
             load([exp_path '/' exp_name '/UndistortedData2d/Secondary' num2str(icams) '/data2d.mat'])
@@ -156,16 +115,11 @@ for icams = 1:ncams-1 % since calibration is done pairwise, primary camera param
         cam_mat_all(:,:,icams+1) = cam_mat';
         %Loading 2d data csv folder from DLC for primary camera
         if ~run_undistort
-            csvname = dir([exp_path '/' exp_name '/Data2d/Primary'  '/*.csv']);
-            if  isempty(csvname) %there has to be only one csv file in this directory, dir function returns '.','..' first and then the files contained
-                flag_mis = 1;
-                uiwait(msgbox(sprintf(['Missing required number of csv files in' exp_path '/' exp_name '/Data2d/Primary']),'Problem detected'))
-                return
-            end
+            
             if usingdlc
-                [data2d,data2dllh,flag_mis] = load_dlcdata([csvname.folder '/' csvname.name],nframes,nfeatures,flag_mis);
+                [data2d,data2dllh,flag_mis] = load_dlcdata(primary2D_datafullpath{1,1},nframes,nfeatures,flag_mis);
             else
-                [data2d,flag_mis] = load_otherdata([csvname.folder '/' csvname.name],nframes,nfeatures,flag_mis);
+                [data2d,flag_mis] = load_otherdata(primary2D_datafullpath{1,1},nframes,nfeatures,flag_mis);
             end
             if flag_mis == 1 %case when the load_dlcdata function sets flag to 1
                 uiwait(msgbox(['Number of data entries in 2D tracked csv file at ' csvname.folder ' does not match specified duration of recording and frame rate in config file. Check and re-run main function to proceed'],'Problem detected'))
@@ -175,12 +129,12 @@ for icams = 1:ncams-1 % since calibration is done pairwise, primary camera param
         else
 
             if ~exist([exp_path '/' exp_name '/UndistortedData2d/Primary' '/data2d.mat'],'file') 
+                disp('Starting undistortion on 2D data from primary camera')
                 mkdir([exp_path '/' exp_name '/UndistortedData2d/Primary' ])
-                csvname = dir([exp_path '/' exp_name '/Data2d/Primary'  '/*.csv']);
                 if usingdlc
-                    [data2d,data2dllh,flag_mis] = load_dlcdata([csvname.folder '/' csvname.name],nframes,nfeatures,flag_mis);
+                    [data2d,data2dllh,flag_mis] = load_dlcdata(primary2D_datafullpath{1,1},nframes,nfeatures,flag_mis);
                 else
-                    [data2d,flag_mis] = load_otherdata([csvname.folder '/' csvname.name],nframes,nfeatures,flag_mis);
+                    [data2d,flag_mis] = load_otherdata(primary2D_datafullpath{1,1},nframes,nfeatures,flag_mis);
                 end
                 if flag_mis == 1 %case when the load_dlcdata function sets flag to 1
                     uiwait(msgbox(['Number of data entries in 2D tracked csv file at ' csvname.folder ' does not match specified duration of recording and frame rate in config file. Check and re-run main function to proceed'],'Problem detected'))
@@ -193,16 +147,20 @@ for icams = 1:ncams-1 % since calibration is done pairwise, primary camera param
                     data2d = undistortPoints(temp,stereoParams.CameraParameters2);
                 else
                     isnan_temp = isnan(temp);
-                    data2d = nan(size(temp,1),size(temp,2));
-                    data2d(~isnantemp) = undistortPoints(temp(~isnantemp),stereoParams.CameraParameters2);
+                    temp(isnan_temp) =  0; 
+                    data2d = undistortPoints(temp,stereoParams.CameraParameters2);
+                    data2d(isnan_temp) = NaN;
+                    
                 end
                 
                 temp = reshape(data2d,nframes,nfeatures,2);
                 data2d = permute(temp,[1 3 2]);
                 data2d = data2d(:,:);
                 if usingdlc
-                    save([exp_path '/' exp_name '/UndistortedData2d/Primary' '/data2d.mat'],'data2d','data2dllh')
+                    disp(['Saving undistorted 2D data for primary camera at ' exp_path '/' exp_name ' /UndistortedData2d/Primary'])
+                    save([exp_path '/' exp_name '/UndistortedData2d/Primary' '/data2d.mat'],'data2d','data2dllh')                    
                 else
+                    disp(['Saving undistorted 2D data for primary camera at ' exp_path '/' exp_name ' /UndistortedData2d/Primary'])
                     save([exp_path '/' exp_name '/UndistortedData2d/Primary' '/data2d.mat'],'data2d')
                 end
             else

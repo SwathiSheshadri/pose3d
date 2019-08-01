@@ -42,10 +42,10 @@ if calib_videos == 1
 
             case 'Extract Images'
                 rmdir([exp_path '/' 'Imagesforcalibration/'],'s')
-                if exist([exp_path '/' 'CalibSessionFiles/'],'dir') %if new images are extracted calibration and undistortion must be repeated
+                if exist([exp_path '/' 'CalibSessionFiles/'],'s') %if new images are extracted calibration and undistortion must be repeated
                     rmdir([exp_path '/' 'CalibSessionFiles/'],'s')%therefore deleted previously calculated files
                 end
-                if exist([exp_path '/' exp_name '/UndistortedData2d/'],'dir')
+                if exist([exp_path '/' exp_name '/UndistortedData2d/'],'folder')
                     rmdir([exp_path '/' exp_name '/UndistortedData2d/'],'s') %if calibration is repeated undistortion also has to repeat
                 end
                 disp('Extracting frames for calibration; try decreasing frames_to_use if this takes too long')
@@ -56,10 +56,7 @@ if calib_videos == 1
                     if flag_mis == 1
                         return
                     end
-                    flag_mis = extract_frames(calibvideos_secondary{icams},[exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Secondary' num2str(icams) '/'],frames_to_use,flag_mis,num2str(icams),'Secondary') ;    
-                    if flag_mis == 1
-                        return
-                    end
+                    flag_mis = extract_frames(calibvideos_secondary{icams},[exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Secondary' num2str(icams) '/'],frames_to_use,flag_mis,num2str(icams),'Secondary') ;           
                 end
         end        
     end
@@ -112,10 +109,10 @@ else
 
             case 'Extract Images'
                 rmdir([exp_path '/' 'Imagesforcalibration/'],'s')
-                if exist([exp_path '/' 'CalibSessionFiles/'],'dir') %if new images are extracted calibration and undistortion must be repeated
+                if exist([exp_path '/' 'CalibSessionFiles/'],'s') %if new images are extracted calibration and undistortion must be repeated
                     rmdir([exp_path '/' 'CalibSessionFiles/'],'s')%therefore deleted previously calculated files
                 end
-                if exist([exp_path '/' exp_name '/UndistortedData2d/'],'dir')
+                if exist([exp_path '/' exp_name '/UndistortedData2d/'],'folder')
                     rmdir([exp_path '/' exp_name '/UndistortedData2d/'],'s') %if calibration is repeated undistortion also has to repeat
                 end
                 for icams = 1:ncams-1
@@ -213,7 +210,7 @@ else
                 disp('Proceeding to 3D reconstruction...')
             case 'Redo Stereo Camera Calibration'
                 rmdir([exp_path '/' 'CalibSessionFiles/'],'s')
-                if exist([exp_path '/' exp_name '/UndistortedData2d/'],'dir')
+                if exist([exp_path '/' exp_name '/UndistortedData2d/'],'folder')
                     rmdir([exp_path '/' exp_name '/UndistortedData2d/'],'s') %if calibration is repeated undistortion also has to repeat
                 end
                 for icams = 1:ncams-1

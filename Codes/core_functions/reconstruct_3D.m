@@ -62,7 +62,7 @@ if ~exist([exp_path '/' exp_name '/Data3d/Data3d.mat'],'file')
     mkdir([exp_path '/' exp_name '/Data3d'])
     save([exp_path '/' exp_name '/Data3d/Data3d.mat'],'coords3d')
 else
-    answer = questdlg('3D data has been previously saved, do you want to overwrite it?','Save new 3D reconstructed data','Yes','No','Yes');
+    answer = questdlg('3D data has been previously saved, do you want to save again?','Save latest 3D reconstructed data','Yes','No','Yes');
         % Handle response
         switch answer
 

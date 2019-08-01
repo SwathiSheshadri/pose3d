@@ -44,7 +44,7 @@ try
         filename=strcat('frame',num2str(img),'.png');
         vidframe = read(vidfile, img);
         if ~mod(k,5)
-            disp(['Writing calibration file ' num2str(k) ' of ' num2str(frames_to_use) ' for ' cam_type ' of camera pair ' num2str(num_pair)])
+            disp(['Writing calibration image ' num2str(k) ' of ' num2str(frames_to_use) ' for ' cam_type ' of camera pair ' num2str(num_pair)])
         end
         imwrite(vidframe,[dest_path filename]);
         k=k+1;

@@ -75,10 +75,10 @@ for icams = 1:ncams-1 % since calibration is done pairwise, primary camera param
             if usingdlc                              
                 data2d = undistortPoints(temp,stereoParams.CameraParameters2);
             else
+                data2d = nan(size(temp));
                 isnan_temp = isnan(temp);
-                temp(isnan_temp) =  0; 
-                data2d = undistortPoints(temp,stereoParams.CameraParameters2);
-                data2d(isnan_temp) = NaN;
+                temp(isnan_temp(:,1),:) =  [];
+                data2d(~isnan_temp(:,1),:)= undistortPoints(temp,stereoParams.CameraParameters2);
             end
             temp = reshape(data2d,nframes,nfeatures,2);
             data2d = permute(temp,[1 3 2]);
@@ -146,11 +146,10 @@ for icams = 1:ncams-1 % since calibration is done pairwise, primary camera param
                 if usingdlc                              
                     data2d = undistortPoints(temp,stereoParams.CameraParameters2);
                 else
+                    data2d = nan(size(temp));
                     isnan_temp = isnan(temp);
-                    temp(isnan_temp) =  0; 
-                    data2d = undistortPoints(temp,stereoParams.CameraParameters2);
-                    data2d(isnan_temp) = NaN;
-                    
+                    temp(isnan_temp(:,1),:) =  [];
+                    data2d(~isnan_temp(:,1),:)= undistortPoints(temp,stereoParams.CameraParameters2);                    
                 end
                 
                 temp = reshape(data2d,nframes,nfeatures,2);

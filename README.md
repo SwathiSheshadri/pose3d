@@ -17,11 +17,11 @@ pose3d is implemented in Matlab (The MathWorks Inc., Natick, Massachusetts) for 
 ## Why pose3d?
 Markerless tracking is a crucial experimental requirement for behavioral studies conducted across species in different enviroments. A recently developed toolbox called [DeepLabCut (DLC)](https://github.com/AlexEMG/DeepLabCut) leverages Artificial Neural Network (ANN) based computer vision to make precise markerless tracking possible for scientific experiments. To track complex behaviors such as grasping with object interaction in 3D as illustrated in Figure 1, experimental setups with multiple cameras have to be developed. Development of such systems can largely benefit from a robust and easy to use camera calibration and 3D reconstruction toolbox. To this end, we developed pose3d, a semi-automated 3D reconstruction toolbox in Matlab. Given the popularity of Matlab in academia, we believe this toolbox will help make 3D reconstruction of 2D tracked behavior easier for researchers to use.<br/>
 
-![](ExampleGrasping_2Dto3D_whitebg.gif)<br/>
+![](ExampleGrasping_2Dto3D.gif)<br/>
 *Figure 1: Reconstruction in 3D of grasping behavior tracked in 2D using DeepLabCut*
 
 ## Running demos
-1) Download the repository and from the main folder of the repository run **./Codes/demo_DLC2d.m** to perform 3D reconstruction of corners of a Rubik's cube tracked in 2D using DLC. 
+1) Download the repository and from the main folder of the repository run **./Codes/demo_DLC2d.m** to perform 3D reconstruction of corners of a Rubik's cube tracked in 2D using DLC. <br/>
 -- Since all the pre-processing steps such as undistortion, camera calibration have been already done for the demo, click proceed when message boxes pop-up. 2D tracked data and videodata used for this demo are included in the DemoData folder for reference. 
 2) Similiar to the first demo from the main folder of the repository, run **./Codes/demo_other2d.m** to perform 3D reconstruction of corners of a Rubik's cube tracked in 2D using any other 2D tracking software. Here we mimick other software by manual 2D tracking.<br/>
 

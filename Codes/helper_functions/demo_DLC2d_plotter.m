@@ -72,16 +72,36 @@ devall = abs(reconall(:) - groundtruth);
 devbp = abs(reconbp(:) - groundtruth);
 devavg = abs(reconavg(:) - groundtruth);
 
-[H1,P1] = ttest2(devall,devbp,'tail','left');
-disp('Results from statistical tests :')
-if H1 == 1 && P1 <= 0.05
-    disp('Deviations from true edge length smaller when using all cameras than best two')
+[p,tbl,stats] = kruskalwallis([devall,devbp,devavg],[],'off');
+[c,m,h] = multcompare(stats,[],'off');
+
+pval_allvsbp = c(1,6); % 6th column returned by multcompare function holds p value
+meandiff_allvsbp = c(1,4); % 4th column returned hold difference in mean between all and avg modes
+
+pval_allvsavg = c(2,6); % 6th column returned by multcompare function holds p value
+meandiff_allvsavg = c(2,4); % 4th column returned hold difference in mean between all and avg modes
+
+if pval_allvsbp < 0.001 && meandiff_allvsbp < 0
+    disp(['Deviations from true edge length is on average significantly smaller (p < '  num2str(0.001) ') when using all cameras than when using best pair'])
 end
 
-[H2,P2] = ttest2(devall,devavg,'tail','left');
-if H2 == 1 && P2 <= 0.05
-    disp('Deviations from true edge length smaller when using all cameras than average over pairs')
+if pval_allvsavg < 0.001 && meandiff_allvsavg < 0
+    disp(['Deviations from true edge length is on average significantly smaller (p < '   num2str(0.001)  ') when using all cameras than when averaging over pairs'])
 end
+
+
+% [H1,P1] = ttest2(devall,devbp,'tail','left');
+% disp('Results from statistical tests :')
+% if H1 == 1 && P1 <= 0.05
+%     disp('Deviations from true edge length smaller when using all cameras than best two')
+% end
+% 
+% [H2,P2] = ttest2(devall,devavg,'tail','left');
+% if H2 == 1 && P2 <= 0.05
+%     disp('Deviations from true edge length smaller when using all cameras than average over pairs')
+% end
+
+
 
 %% Vizualization
 %setting maximum and minimum of axis of visualization
@@ -193,8 +213,6 @@ if whichfilter
         end        
     end
 end
-
-else
     
 end
 

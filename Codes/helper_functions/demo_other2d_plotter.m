@@ -65,11 +65,14 @@ disp(['Average error (mm) for reconstruction by averaging over all pairs :' num2
 devall = abs(reconall(:) - groundtruth);
 devavg = abs(reconavg(:) - groundtruth);
 
-[H1,P1] = ttest2(devall,devavg,'tail','left');
-if H1 == 1 && P1 <= 0.05
-    disp('Deviations from true edge length smaller when using all cameras than average over pairs')
-end
+[p,tbl,stats] = kruskalwallis([devall,devavg],[],'off');
+[c,m,h] = multcompare(stats,[],'off');
+pval_allvsavg = c(1,6); % 6th column returned by multcompare function holds p value
+meandiff_allvsavg = c(1,4); % 4th column returned hold difference in mean between all and avg modes
 
+if pval_allvsavg < 0.001 && meandiff_allvsavg < 0
+    disp(['Deviations from true edge length is on average significantly smaller (p < '   num2str(0.001)  ') when using all cameras than when averaging over pairs'])
+end
 
 %setting maximum and minimum of axis of visualization
 xvals = coords3d(:,1:3:nfeatures*3,1); 
@@ -134,8 +137,6 @@ if whichfilter
         end        
     end
 end
-
-else
     
 end
 

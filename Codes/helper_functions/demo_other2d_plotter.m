@@ -66,7 +66,7 @@ devall = abs(reconall(:) - groundtruth);
 devavg = abs(reconavg(:) - groundtruth);
 
 [p,tbl,stats] = kruskalwallis([devall,devavg],[],'off');
-[c,m,h] = multcompare(stats,[],'off');
+[c] = multcompare(stats,[],'off');
 pval_allvsavg = c(1,6); % 6th column returned by multcompare function holds p value
 meandiff_allvsavg = c(1,4); % 4th column returned hold difference in mean between all and avg modes
 

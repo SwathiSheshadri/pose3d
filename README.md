@@ -59,6 +59,6 @@ To install this toolbox, add all contents of this repository to Matlab path.
 For questions on the toolbox and citation please contact us at swathishesh@gmail.com or HScherberger@dpz.eu
 
 ## Acknowledgements
-We are very thankful to Mackenzie Mathis and Alexandar Mathis for their help in getting us going with using vision based tracking with DLC. Discussions with several colleagues at the German Primate Center including Andrej Fillipow, Michael Berger, Sebastian Mueller, Attila Trunk and Daniela Buchwald were very useful for the development of our tracking experimental setup. Thanks also to Viktorija Schek for testing out some of our implementations. 
+We are very thankful to Mackenzie Mathis and Alexander Mathis for their help in getting us going with using vision based tracking with DLC. Discussions with several colleagues at the German Primate Center including Andrej Fillipow, Michael Berger, Sebastian Mueller, Attila Trunk and Daniela Buchwald were very useful for the development of our tracking experimental setup. Thanks also to Viktorija Schek for testing out some of our implementations. 
 Our implementation in Matlab was inspired by [Anipose](https://github.com/lambdaloop/anipose) - a python toolbox for 3D reconstruction. 
 

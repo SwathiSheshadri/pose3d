@@ -1,7 +1,7 @@
 # 3D reconstrution toolbox for behavior tracked with multiple cameras 
 
 ## What is pose3d?
-pose3d is implemented in Matlab (The MathWorks Inc., Natick, Massachusetts) for 3D reconstruction of features tracked in 2D using DLC or any other tracking software. It provides a semi-automated 3D reconstruction workflow that takes users through the process of camera calibration, undistortion, triangulation as well as post processing steps such as filtering to reduce outliers. In addition to providing an easy to use workflow, the key component in our implementation is the ‘n’ camera triangulation function that allows users to select 2D tracked data from the best pair of cameras for every feature and time point using an automated selection criterion or use data from all cameras for 3D reconstruction.
+pose3d is implemented in Matlab (The MathWorks Inc., Natick, Massachusetts) for 3D reconstruction of features tracked in 2D using DeepLabCut(DLC) or any other tracking software. It provides a semi-automated 3D reconstruction workflow that takes users through the process of camera calibration, undistortion, triangulation as well as post processing steps such as filtering to reduce outliers. In addition to providing an easy to use workflow, the key component in our implementation is the ‘n’ camera triangulation function that allows users to select 2D tracked data from the best pair of cameras for every feature and time point using an automated selection criterion or use data from all cameras for 3D reconstruction.
 
 ## Table of Contents
   * [Why pose3d?](#Why-pose3d)
@@ -15,15 +15,15 @@ pose3d is implemented in Matlab (The MathWorks Inc., Natick, Massachusetts) for 
   * [Acknowledgements](#acknowledgements)
 
 ## Why pose3d?
-Markerless tracking is a crucial experimental requirement for behavioral studies conducted across species in different enviroments. A recently developed toolbox called [DeepLabCut (DLC)](https://github.com/AlexEMG/DeepLabCut) leverages Artificial Neural Network (ANN) based computer vision to make precise markerless tracking possible for scientific experiments. To track complex behaviors such as grasping with object interaction in 3D as illustrated in Figure 1, experimental setups with multiple cameras have to be developed. Development of such systems can largely benefit from a robust and easy to use camera calibration and 3D reconstruction toolbox. To this end, we developed pose3d, a semi-automated 3D reconstruction toolbox in Matlab. Given the popularity of Matlab in academia, we believe this toolbox will help make 3D reconstruction of 2D tracked behavior easier for researchers to use.<br/>
+Markerless tracking is a crucial experimental requirement for behavioral studies conducted in many species in different enviroments. A recently developed toolbox called [DeepLabCut (DLC)](https://github.com/AlexEMG/DeepLabCut) leverages Artificial Neural Network (ANN) based computer vision to make precise markerless tracking possible for scientific experiments. To track complex behaviors such as grasping with object interaction in 3D as illustrated in Figure 1, experimental setups with multiple cameras have to be developed. Development of such systems can largely benefit from a robust and easy to use camera calibration and 3D reconstruction toolbox. To this end, we developed pose3d, a semi-automated 3D reconstruction toolbox in Matlab. Given the popularity of Matlab in academia, we believe this toolbox will help make 3D reconstruction of 2D tracked behavior easier for researchers to use.<br/>
 
 ![](ExampleGrasping_2Dto3D.gif)<br/>
 *Figure 1: Reconstruction in 3D of grasping behavior tracked in 2D using DeepLabCut*
 
 ## Running demos
-1) Download the repository and from the main folder of the repository run **./Codes/demo_DLC2d.m** to perform 3D reconstruction of corners of a Rubik's cube tracked in 2D using DLC. <br/>
+1) Download or clone our pose3d repository. From the main folder of the repository run **./Codes/demo_DLC2d.m** to perform 3D reconstruction of the corners of a Rubik's cube tracked in 2D using DLC. <br/>
 -- Since all the pre-processing steps such as undistortion, camera calibration have been already done for the demo, click proceed when message boxes pop-up. 2D tracked data and videodata used for this demo are included in the DemoData folder for reference. 
-2) Similiar to the first demo from the main folder of the repository, run **./Codes/demo_other2d.m** to perform 3D reconstruction of corners of a Rubik's cube tracked in 2D using any other 2D tracking software. Here we mimick other software by manual 2D tracking.<br/>
+2) Similiar to the first demo from the main folder of the repository, run **./Codes/demo_other2d.m** to perform 3D reconstruction of the corners of a Rubik's cube tracked in 2D using any other 2D tracking software. Here we mimick other software by manual 2D tracking.<br/>
 
 ## Using pose3d for your data
 Follow the below steps to perform 3D reconstruction of your 2D tracked data. <br/>
@@ -39,7 +39,7 @@ Follow the below steps to perform 3D reconstruction of your 2D tracked data. <br
 Note : If you are using DLC for 2D tracking from 2 or more cameras and have saved the csv files after analysing videos you already meet requirements 1 & 2 stated above.
 
 ## Dependencies 
-In-built functions of Matlab, Computer Vision Toolbox. Code has been tested on MATLAB 2018b across linux, MAC and Windows operating systems.<br/>
+In-built functions of Matlab, Computer Vision Toolbox. Code has been tested on Matlab 2018b across linux, MAC and Windows operating systems.<br/>
 
 ## Troubleshooting 
 1) Mismatch between 2D tracked csv and calibration files. <br/>
@@ -49,8 +49,8 @@ In-built functions of Matlab, Computer Vision Toolbox. Code has been tested on M
 3) Camera movement between recording calibration videos and behavior. <br/>
 -- Ensure that your cameras are fixed between recording sessions. Record and use new calibration videos everytime you suspect that the cameras in your setup have moved. <br/>
 4) Positioning of the cameras is not optimal or number of cameras is not sufficient for the behavior of interest. <br/>
--- For every feature of interest you want to track, you must be able to perform 2D tracking reliably from atleast two cameras. Ensure to have sufficent number of cameras to track the behavior of interest and position them such that their centers are not along a single line or a plane. <br/>
-5) Our toolbox is designed to work with [stereoCameraCalibrator](https://www.mathworks.com/help/vision/ug/stereo-camera-calibrator-app.html) GUI in MATLAB. The GUI requires simulataneously acquired images from the two cameras to have the same name and saved it different folders. In case you have acquired calibration videos, all you need to do is edit the config file to enter the path and name of the calibration videos and pose3d automatically does the rest for you. In case you have acquired images from calibration, please have your images labelled as shown in ./DemoExperiments/Imagesforcalibration/ folder. pose3d automatically goes through every primary and secondary camera pairs and prompts you to select all calibration images per camera. <br/>
+-- For every feature of interest you want to track, you must be able to perform 2D tracking reliably from at least two cameras. Ensure to have sufficent number of cameras to track the behavior of interest and position them such that their centers are not along a single line or a plane. <br/>
+5) Our toolbox is designed to work with [stereoCameraCalibrator](https://www.mathworks.com/help/vision/ug/stereo-camera-calibrator-app.html) GUI in Matlab. The GUI requires simulataneously acquired images from the two cameras to have the same name and saved it different folders. In case you have acquired calibration videos, all you need to do is edit the config file to enter the path and name of the calibration videos and pose3d automatically does the rest for you. In case you have acquired images from calibration, please have your images labelled as shown in ./DemoExperiments/Imagesforcalibration/ folder. pose3d automatically goes through every primary and secondary camera pairs and prompts you to select all calibration images per camera. <br/>
 
 ## Installation
 To install this toolbox, add all contents of this repository to Matlab path. 

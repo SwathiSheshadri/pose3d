@@ -185,7 +185,7 @@ if whichfilter
         save([exp_path '/' exp_name '/FilteredData3d/Data3d.mat'],'coords3d')
     else
     
-    answer = questdlg('Filtered data has been previously saved, do you want to overwrite it?','Save new filtered data','Yes','No','Yes');
+    answer = questdlg('Filtered data has been previously saved, do you want to save again?','Save new filtered data','Yes','No','Yes');
         % Handle response
         switch answer
 

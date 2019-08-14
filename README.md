@@ -22,7 +22,7 @@ Markerless tracking is a crucial experimental requirement for behavioral studies
 
 ## Running demos
 1) Download or clone our pose3d repository. From the main folder of the repository run **./Codes/demo_DLC2d.m** to perform 3D reconstruction of the corners of a Rubik's cube tracked in 2D using DLC. <br/>
--- Since all the pre-processing steps such as undistortion, camera calibration have been already done for the demo, click proceed when message boxes pop-up. 2D tracked data and videodata used for this demo are included in the DemoData folder for reference. 
+-- Since undistortion, camera calibration and 3D reconstruction have already been done and saved for the demo, click 'no' when message boxes pop-up and ask if you want to save. 2D tracked data and videodata used for this demo are included in the DemoData folder for reference. 
 2) Similiar to the first demo from the main folder of the repository, run **./Codes/demo_other2d.m** to perform 3D reconstruction of the corners of a Rubik's cube tracked in 2D using any other 2D tracking software. Here we mimick other software by manual 2D tracking.<br/>
 
 ## Using pose3d for your data

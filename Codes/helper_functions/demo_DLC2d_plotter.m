@@ -76,7 +76,7 @@ devavg = abs(reconavg(:) - groundtruth);
 [c] = multcompare(stats,[],'off');
 
 pval_allvsbp = c(1,6); % 6th column returned by multcompare function holds p value
-meandiff_allvsbp = c(1,4); % 4th column returned hold difference in mean between all and avg modes
+meandiff_allvsbp = c(1,4); % 4th column returned hold difference in mean between all and bp modes
 
 pval_allvsavg = c(2,6); % 6th column returned by multcompare function holds p value
 meandiff_allvsavg = c(2,4); % 4th column returned hold difference in mean between all and avg modes

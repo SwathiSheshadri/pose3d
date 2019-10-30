@@ -54,7 +54,7 @@ if plotresults
     figure
 
     colorclass = colormap(jet); %jet is default in DLC 
-    color_map_self=colorclass(1:nfeatures:64,:);
+    color_map_self=colorclass(ceil(linspace(1,64,nfeatures)),:);
     tic
     for t =1:nskip:size(coords3d,1)
 

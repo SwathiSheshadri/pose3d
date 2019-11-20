@@ -88,32 +88,31 @@ frames_to_use = 35;
 %% Copy and paste your calibration video paths and file names (relevant only if you record calibration videos)
 % Ignore this section if you have taken images for calibration
 
-% For pose3d there must be ncams-1 videos recorded from primary (each video
-% recorded simultaneously with every secondary camera)
 % Example below for a 5 camera system with 1 primary and 4 secondary
 % this path can be anywhere that is readable by your user on the computer
-
 % **Important info** -- 
 %----------------------
-% please maintain the order of primary and secondary video files  
+% please maintain the order of primary and secondary video files in case
+% you have made pairwise calibration video recordings with your primary and
+% every secondary camera
 % Eg : calibPrimarywithsec1.avi is the calibration video recorded from
 % primary camera while simultaneously recording calib_sec1.avi from 
 % camera secondary1
 
-calibvideos_primary = [{'calibvideospath../calibPrimarywithsec1.avi'};...
-                       {'calibvideospath../calibPrimarywithsec2.avi'};...
+calibvideos_primary = [{'calibvideospath../calibPrimarywithsec1.avi'};...  % ** If you have only one calibration video from primary for all secondary cameras
+                       {'calibvideospath../calibPrimarywithsec2.avi'};...  %    use for eg: calibvideos_primary = {'calibvideospath../calibPrimary.avi'} **
                        {'calibvideospath../calibPrimarywithsec3.avi'};...
                        {'calibvideospath../calibPrimarywithsec4.avi'}];
 
 
 %Every secondary camera must have one calibration video recorded
 %simultaneously with primary camera
-% this path can be anywhere that is readable by your user on the computer
+%this path can be anywhere that is readable by your user on the computer
 calibvideos_secondary = [{'calibvideospath../calib_sec1.avi'};...
                          {'calibvideospath../calib_sec2.avi'};...
                          {'calibvideospath../calib_sec3.avi'};...
                          {'calibvideospath../calib_sec4.avi'};]; %path to your calibration video recorded from secondary camera 1 with primary
-
+                                    
 %% calibfiles_format & folderwithpngs (relevant only when you have taken images for calibration)
 % format variable relevant only if you have calibration images (i.e
 % calib_videos = 0), if you have videos the file path must include the full
@@ -139,7 +138,7 @@ run_undistort = 0; %1: run undistort, 0: do not undistort
 plotresults = 1; %plots resulting 3D coordinates at recorded fps
 
 
-path_to_2Dtracked_video = [exp_path '/' exp_name '/Videos/*.mp4']; %full path of the 2D tracked video you want to visualize alongside 3D tracked results
+path_to_2Dtracked_video = '.../*.mp4'; %full path of the 2D tracked video you want to visualize alongside 3D tracked results
 
 
 nskip = 1; %min value nskip can take is 1, increase this when you have long recording (plots results from every nskip frames)
@@ -156,7 +155,7 @@ drawline = [ 1 2; 2 3; 3 4; 4 1; 5 6;6 7;...
     7 8;8 5;1 5; 2 6;3 7; 4 8]; %0 : skeleton will not be drawn, Eg : [ 1 2; 2 3;], draws lines between features 1 and 2, 2 and 3 
 
 calc_error = 1; %to be set to 0 if ground truth lengths are not available
-ground_truth = [55 55 55 55 55 55 55 55 55 55 55 55] ; %enter line segment lengths ( refer to the skeleton and ensure to have as many length entries here as there are lines in the skeleton )
+ground_truth = [55 55 55 55 55 55 55 55 55 55 55 55] ; %enter line segment lengths 1xn vector (where n corresponds to the number of lines in the skeleton)
 
 nframes = rec_time*fps; %nothing to edit here onwards
 
@@ -187,6 +186,12 @@ if calib_videos
        flag_mis = 1;
        uiwait(msgbox('Check if all calibration file names are unique and are included for every secondary camera and re-run main program to proceed.'))
     end
+end
+
+%To inform pose3d to use same primary camera calibration video with every
+%secondary camera
+if (length(calibvideos_primary) == 1 && length(calibvideos_secondary) > 1)
+    calibvideos_primary(1:length(calibvideos_secondary),1) = deal(calibvideos_primary);
 end
 
 if nskip == 0 || fps == 0 
@@ -229,3 +234,4 @@ end
 if ~exist('flag_mis','var')
     flag_mis = 0; %Nothing to flag, checks passed
 end
+

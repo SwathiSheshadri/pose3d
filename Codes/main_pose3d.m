@@ -14,7 +14,7 @@ close all
 clc
 
 %% Initializes experiment parameters as provided in your config file 
-template_config_file %run your config file here
+testing_config_file %run your config file here
 
 %% Call for calibration 
 calibration_helper

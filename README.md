@@ -8,8 +8,9 @@ pose3d is implemented in Matlab (The MathWorks Inc., Natick, Massachusetts) for 
   * [Running demos](#Running-demos)
   * [Using pose3d for your data](#Using-pose3d-for-your-data)
   * [Data requirements for pose3d](#Data-requirements-for-pose3d)
+  * [Checkerboard images or videos for calibration](#Checkerboard-images-or-videos-for-calibration)
   * [Dependencies](#dependencies)
-  * [Troubleshooting](#Troubleshooting)
+  * [Video tutorial and troubleshooting](#Video-tutorial-and-troubleshooting)
   * [Installation](#installation)
   * [Citation](#citation)
   * [Acknowledgements](#acknowledgements)
@@ -38,18 +39,31 @@ Follow the below steps to perform 3D reconstruction of your 2D tracked data. <br
 3) Record checkerboard calibration videos by fixing one of your setup cameras as primary. Primary camera should be selected such that you can obtain checker board images simulataneously with the primary and every other camera in full view. For instance, if you have 3 cameras, let us call one as primary and the remaining cameras as secondary 1 and secondary 2. From this setup, first record checkerboard videos with cameras primary and secondary 1 simultaneously. Next record checkerboard videos with cameras primary and secondary 2 simultaneously. Save these videos and have them accesible from your computer. <br/>
 Note : If you are using DLC for 2D tracking from 2 or more cameras and have saved the csv files after analysing videos you already meet requirements 1 & 2 stated above.
 
+## Checkerboard images or videos for calibration
+1) Print checkerboard for camera calibration
+-- This can be done by first typing 'open checkerboardPattern.pdf' in Matlab command line and then printing out the checkerboard layout. Please make sure the layout is attached to a smooth and stable surface before using it for calibration.
+2) Present the checkboard to your primary and secondary cameras simulataneous so that the whole frame of the checkerboard is within the field of view of the two cameras. Acquire images of videos of the checkboard being presented at varied angles and distances from the camera. 
+3) Matlab's stereoCameraCalibrator GUI recommends using between 10 and 20 frames for calibration. However, we recommend collecting between ~50-100 frames (especially in low-lit conditions where the checkerboard would be harder to detect), since some of the frames automatically get rejected by the GUI based on the inability to detect whole checkboard or due to the tilt angle of the board being > 45 degree relative to the camera plane.
+For tips on acquiring calibration files can be obtained at : [Mathworks' Camera Calibration](https://www.mathworks.com/help/vision/ug/single-camera-calibrator-app.html#bt19jdq-1)
+
+
 ## Dependencies 
 In-built functions of Matlab, Computer Vision Toolbox. Code has been tested on Matlab 2018b across linux, MAC and Windows operating systems.<br/>
 
-## Troubleshooting 
+## Video tutorial and troubleshooting
+Video tutorials to use pose3d can be found at the below links:
+[Case 1: 3D reconstruction when calibrating with images](https://www.dropbox.com/s/zp2wh5ltzuwmsvo/Tutorial_with_calib_frames.mov?dl=0)
+[Case 2: For calibration with recorded videos](https://www.dropbox.com/s/fb7mas4fm20q4rj/Tutorial_with_calib_videos.mp4?dl=0) <br/>
 1) Mismatch between 2D tracked csv and calibration files. <br/>
 -- In this case there will be failure in 3D reconstruction since data from one camera will be transformed using camera matrix of a different camera.  To avoid this, ensure that the order of 2D data and calibration files is maintained across the config file. Refer to the comments in the template config file for more details.<br/>
+![](./Example_csv_calib_filenames.png)<br/>
+*Figure 2: Example illustration of entering csv and calibration video files in the right order*<br/>
 2) Poor estimation of the intrinsic and extrinsic parameters.<br/>
--- To avoid this case, present the checker board in different angles and record it in full view from both the primary and secondary cameras. If you are making calibration videos, ensure that the whole checkboard is clearly visible in most if not all frames. In addition, check the re-projection errors in the stereo camera calibration GUI to remove outliers and recalibrate for better results. If you are unsure of the kind of calibration videos or images to take, please refer to our example calibration images in the ./DemoExperiments/Imagesforcalibration/ folder. <br/>
+-- To avoid this case, present the checker board in different angles and record it in full view from both the primary and secondary cameras. If you are making calibration videos, ensure that the whole checkboard is clearly visible in most if not all frames. In addition, check the re-projection errors in the stereo camera calibration GUI to remove outliers and recalibrate for better results. If you are unsure of the kind of calibration videos or images to take, please refer to our example calibration images in the ./DemoExperiments/Imagesforcalibration/ folder. Refer to section Checkerboard images or videos for calibration in this readme for more details on calibration. <br/>
 3) Camera movement between recording calibration videos and behavior. <br/>
 -- Ensure that your cameras are fixed between recording sessions. Record and use new calibration videos everytime you suspect that the cameras in your setup have moved. <br/>
 4) Positioning of the cameras is not optimal or number of cameras is not sufficient for the behavior of interest. <br/>
--- For every feature of interest you want to track, you must be able to perform 2D tracking reliably from at least two cameras. Ensure to have sufficent number of cameras to track the behavior of interest and position them such that their centers are not along a single line or a plane. <br/>
+-- For every feature of interest you want to track, you must be able to perform 2D tracking reliably from at least two cameras. Ensure to have sufficent number of cameras to track the behavior of interest and position the cameras such that they cover the tracking workspace as much as possible. <br/>
 5) Our toolbox is designed to work with [stereoCameraCalibrator](https://www.mathworks.com/help/vision/ug/stereo-camera-calibrator-app.html) GUI in Matlab. The GUI requires simulataneously acquired images from the two cameras to have the same name and saved it different folders. In case you have acquired calibration videos, all you need to do is edit the config file to enter the path and name of the calibration videos and pose3d automatically does the rest for you. In case you have acquired images from calibration, please have your images labelled as shown in ./DemoExperiments/Imagesforcalibration/ folder. pose3d automatically goes through every primary and secondary camera pairs and prompts you to select all calibration images per camera. <br/>
 
 ## Installation

@@ -190,8 +190,10 @@ end
 
 %To inform pose3d to use same primary camera calibration video with every
 %secondary camera
-if (length(calibvideos_primary) == 1 && length(calibvideos_secondary) > 1)
-    calibvideos_primary(1:length(calibvideos_secondary),1) = deal(calibvideos_primary);
+if (length(calibvideos_primary) == 1 && length(calibvideos_secondary) > 1 && calib_videos == 1)
+    flag_1primary = 1;
+else
+    flag_1primary = 0;
 end
 
 if nskip == 0 || fps == 0 

@@ -143,6 +143,7 @@ end
 
 str = sprintf(['reconstructed edge length = %0.2f ' char(177) ' %0.2f mm over %d frames'],nanmean(reconall(:)),nanstd(reconall(:)),nframes);
 
+k = 1;
 for i =1:npoints:size(coords3d,1) %movies files saved as .mat file for every 5th point (to make trying out demo easier)
     temp = reshape(coords3d(i,:,1),3,nfeatures);
     scatter3(temp(1,:),temp(2,:),temp(3,:),250*ones(1,nfeatures),color_map_self(1:nfeatures,:),'filled','Parent', ha(1));
@@ -151,15 +152,15 @@ for i =1:npoints:size(coords3d,1) %movies files saved as .mat file for every 5th
         line(pts(:,1), pts(:,2), pts(:,3),'color','k','linewidth',1.5,'Parent', ha(1))
     end
 
-    imagesc(movie1(:,:,:,i),'Parent', ha(2)) %video recorded from first camera
+    imagesc(movie1(:,:,:,k),'Parent', ha(2)) %video recorded from first camera
   
-    imagesc(movie2(:,:,:,i),'Parent', ha(3)) %video recorded from second camera
+    imagesc(movie2(:,:,:,k),'Parent', ha(3)) %video recorded from second camera
   
-    imagesc(movie3(:,:,:,i),'Parent', ha(4))
+    imagesc(movie3(:,:,:,k),'Parent', ha(4))
    
-    imagesc(movie4(:,:,:,i),'Parent', ha(5))
+    imagesc(movie4(:,:,:,k),'Parent', ha(5))
 
-    imagesc(movie5(:,:,:,i),'Parent', ha(6))
+    imagesc(movie5(:,:,:,k),'Parent', ha(6))
 
     
     set(ha(1),'view',[-127.1,21.8],'xlim',[xmin xmax],'ylim',[ymin ymax],'zlim',[zmin zmax],'Zdir', 'reverse','Ydir', 'reverse') %change view and axis limits to fit your data
@@ -174,7 +175,8 @@ for i =1:npoints:size(coords3d,1) %movies files saved as .mat file for every 5th
     set(gcf, 'color', 'white')
    
     pause(0.05)
-
+    k = k+1;
+    
 end
 
 

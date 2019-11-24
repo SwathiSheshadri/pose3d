@@ -19,18 +19,37 @@ if calib_videos == 1
      if ~exist([exp_path '/' 'Imagesforcalibration/'],'dir')
         
         disp('Extracting frames for calibration; try increasing nskip if this takes too long')
-        for icams = 1:ncams-1
-            mkdir([exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Primary/'])
-            mkdir([exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Secondary' num2str(icams) '/'])
-            flag_mis = extract_frames(calibvideos_primary{icams},[exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Primary/'],frames_to_use,flag_mis,num2str(icams),'Primary');
-            if flag_mis == 1
-                return
+
+        if ~flag_1primary
+            for icams = 1:ncams-1
+                mkdir([exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Primary/'])
+                mkdir([exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Secondary' num2str(icams) '/'])
+                flag_mis = extract_frames(calibvideos_primary{icams},[exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Primary/'],frames_to_use,flag_mis,num2str(icams),'Primary');
+                if flag_mis == 1
+                    return
+                end
+                flag_mis = extract_frames(calibvideos_secondary{icams},[exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Secondary' num2str(icams) '/'],frames_to_use,flag_mis,num2str(icams),'Secondary') ;    
+                if flag_mis == 1
+                    return
+                end
             end
-            flag_mis = extract_frames(calibvideos_secondary{icams},[exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Secondary' num2str(icams) '/'],frames_to_use,flag_mis,num2str(icams),'Secondary'); 
-            if flag_mis == 1
-                return
+        else
+            for icams = 1:ncams-1
+                mkdir([exp_path '/' 'Imagesforcalibration/Secondary' num2str(icams) '/'])
+                if icams == 1
+                    mkdir([exp_path '/' 'Imagesforcalibration/Primary/'])
+                    flag_mis = extract_frames(calibvideos_primary{icams},[exp_path '/' 'Imagesforcalibration/Primary/'],frames_to_use,flag_mis,num2str(icams),'Primary');
+                    if flag_mis == 1
+                        return
+                    end
+                end
+                flag_mis = extract_frames(calibvideos_secondary{icams},[exp_path '/' 'Imagesforcalibration/Secondary' num2str(icams) '/'],frames_to_use,flag_mis,num2str(icams),'Secondary') ;    
+                if flag_mis == 1
+                    return
+                end
             end
         end
+ 
         
      else
         answer = questdlg('Imagesforcalibration folder exists, do you want to proceed to stereo camera calibration or extract images for calibration?','Calibration helper','Proceed','Extract Images','Proceed');
@@ -49,16 +68,36 @@ if calib_videos == 1
                     rmdir([exp_path '/' exp_name '/UndistortedData2d/'],'s') %if calibration is repeated undistortion also has to repeat
                 end
                 disp('Extracting frames for calibration; try decreasing frames_to_use if this takes too long')
-                for icams = 1:ncams-1
-                    mkdir([exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Primary/'])
-                    mkdir([exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Secondary' num2str(icams) '/'])
-                    flag_mis = extract_frames(calibvideos_primary{icams},[exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Primary/'],frames_to_use,flag_mis,num2str(icams),'Primary');
-                    if flag_mis == 1
-                        return
+                
+                if ~flag_1primary
+                    for icams = 1:ncams-1
+                        mkdir([exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Primary/'])
+                        mkdir([exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Secondary' num2str(icams) '/'])
+                        flag_mis = extract_frames(calibvideos_primary{icams},[exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Primary/'],frames_to_use,flag_mis,num2str(icams),'Primary');
+                        if flag_mis == 1
+                            return
+                        end
+                        flag_mis = extract_frames(calibvideos_secondary{icams},[exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Secondary' num2str(icams) '/'],frames_to_use,flag_mis,num2str(icams),'Secondary') ;    
+                        if flag_mis == 1
+                            return
+                        end
                     end
-                    flag_mis = extract_frames(calibvideos_secondary{icams},[exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Secondary' num2str(icams) '/'],frames_to_use,flag_mis,num2str(icams),'Secondary') ;    
-                    if flag_mis == 1
-                        return
+                else
+                    for icams = 1:ncams-1
+                        mkdir([exp_path '/' 'Imagesforcalibration/Secondary' num2str(icams) '/'])
+                        
+                        if icams == 1
+                            mkdir([exp_path '/' 'Imagesforcalibration/Primary/'])
+                            flag_mis = extract_frames(calibvideos_primary{icams},[exp_path '/' 'Imagesforcalibration/Primary/'],frames_to_use,flag_mis,num2str(icams),'Primary');
+                            if flag_mis == 1
+                                return
+                            end
+                        end
+                        
+                        flag_mis = extract_frames(calibvideos_secondary{icams},[exp_path '/' 'Imagesforcalibration/Secondary' num2str(icams) '/'],frames_to_use,flag_mis,num2str(icams),'Secondary') ;    
+                        if flag_mis == 1
+                            return
+                        end
                     end
                 end
         end        
@@ -153,20 +192,39 @@ if ~exist([exp_path '/' 'CalibSessionFiles/'],'dir')
 
     for icams = 1:ncams-1
         mkdir([exp_path '/' 'CalibSessionFiles/PrimarySecondary' num2str(icams) '/'])
-        folder1 = [exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Primary/'];
-        folder2 = [exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Secondary' num2str(icams) '/'];
-        %check if there are empty folders
-        d = dir(folder1);
-        if((d(1).name== '.') && length(d)==2) % dir function returns '.','..' first and the files contained later
-            uiwait(msgbox(sprintf(['Missing files in ' exp_path '/Imagesforcalibration/PrimarySecondary%d. Re-run main function and choose extract new images'],icams),'Problem detected'))
-            flag_mis = 1; 
-            return
-        end
-        d = dir(folder2);
-        if((d(1).name== '.') && length(d)==2)
-            uiwait(msgbox(sprintf(['Missing files in ' exp_path '/Imagesforcalibration/PrimarySecondary%d. Re-run main function and choose extract new images'],icams),'Problem detected'))
-            flag_mis = 1; 
-            return
+        
+        if  ~flag_1primary
+            folder1 = [exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Primary/'];
+            folder2 = [exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Secondary' num2str(icams) '/'];
+            %check if there are empty folders
+            d = dir(folder1);
+            if((d(1).name== '.') && length(d)==2) % dir function returns '.','..' first and the files contained later
+                uiwait(msgbox(sprintf(['Missing files in ' exp_path '/Imagesforcalibration/PrimarySecondary%d. Re-run main function and choose extract new images'],icams),'Problem detected'))
+                flag_mis = 1; 
+                return
+            end
+            d = dir(folder2);
+            if((d(1).name== '.') && length(d)==2)
+                uiwait(msgbox(sprintf(['Missing files in ' exp_path '/Imagesforcalibration/PrimarySecondary%d. Re-run main function and choose extract new images'],icams),'Problem detected'))
+                flag_mis = 1; 
+                return
+            end
+        else %when single primary folder
+            folder1 = [exp_path '/' 'Imagesforcalibration/Primary/'];
+            folder2 = [exp_path '/' 'Imagesforcalibration/Secondary' num2str(icams) '/'];
+            %check if there are empty folders
+            d = dir(folder1);
+            if((d(1).name== '.') && length(d)==2) % dir function returns '.','..' first and the files contained later
+                uiwait(msgbox(sprintf(['Missing files in ' exp_path '/Imagesforcalibration folder for PrimarySecondary%d. Re-run main function and choose extract new images'],icams),'Problem detected'))
+                flag_mis = 1; 
+                return
+            end
+            d = dir(folder2);
+            if((d(1).name== '.') && length(d)==2)
+                uiwait(msgbox(sprintf(['Missing files in ' exp_path '/Imagesforcalibration folder for PrimarySecondary%d. Re-run main function and choose extract new images'],icams),'Problem detected'))
+                flag_mis = 1; 
+                return
+            end
         end
         
         try
@@ -218,8 +276,13 @@ else
                 end
                 for icams = 1:ncams-1
                     mkdir([exp_path '/' 'CalibSessionFiles/PrimarySecondary' num2str(icams) '/'])
-                    folder1 = [exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Primary/'];
-                    folder2 = [exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Secondary' num2str(icams) '/'];
+                    if  ~flag_1primary
+                        folder1 = [exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Primary/'];
+                        folder2 = [exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Secondary' num2str(icams) '/'];
+                    else %when single primary folder
+                        folder1 = [exp_path '/' 'Imagesforcalibration/Primary/'];
+                        folder2 = [exp_path '/' 'Imagesforcalibration/Secondary' num2str(icams) '/'];
+                    end
                     try
                         stereoCameraCalibrator(folder1, folder2, squareSize);
                         CreateStruct.Interpreter = 'tex';

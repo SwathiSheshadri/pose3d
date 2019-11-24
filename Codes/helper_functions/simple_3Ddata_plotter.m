@@ -176,6 +176,7 @@ if calc_error == 1
         disp(['Average error (mm) for reconstruction with mode ' modes_3drecon{imodes} ':' num2str(avgerrorall) ' ' char(177) ' ' num2str(stderrorall)])
 
     end
+    
 
 end
 

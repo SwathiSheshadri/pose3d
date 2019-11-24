@@ -111,6 +111,9 @@ drawline = [ 1 2; 2 3; 3 4; 4 1; 5 6;6 7;...
     7 8;8 5;1 5; 2 6;3 7; 4 8];%Eg : [ 1 2; 2 3;], draws lines between features 1 and 2, 2 and 3 
 
 whichfilter = 2; % 0: No filter; 1: moving average; 2:median filter (if you observe jumps in your feature trajectories try 2 or 1)
+
+%do not change npoints for demo (video data not provided for other cases to
+%make pose3d lighter)
 npoints = 5;%number of data points to use for filter (if you choose 1 or 2 for which filter this value has to be filled)               
 
 nframes = rec_time*fps; %nothing to edit here

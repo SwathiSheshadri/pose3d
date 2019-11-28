@@ -44,14 +44,14 @@ Note: If you are using DLC for 2D tracking from 2 or more cameras and have saved
 -- This can be done by first typing 'open checkerboardPattern.pdf' in Matlab command line and then printing out the checkerboard layout. Please make sure the layout is attached to a smooth and stable surface before using it for calibration.
 2) Present the checkboard to your primary and secondary cameras simultaneously so that the whole frame of the checkerboard is within the field of view of the two cameras. Acquire images or videos of the checkboard being presented at varied angles and distances from the camera. 
 3) Matlab's stereoCameraCalibrator GUI recommends using between 10 and 20 frames for calibration. However, we recommend collecting between ~50-100 frames (especially in low light conditions where the checkerboard would be harder to detect), since some of the frames automatically get rejected by the GUI based on the inability to detect whole checkboard or due to the tilt angle of the board being > 45 degree relative to the camera plane.
-For tips on acquiring calibration files can be obtained at: [Mathworks' Camera Calibration](https://www.mathworks.com/help/vision/ug/single-camera-calibrator-app.html#bt19jdq-1)<br/>
+Further tips on acquiring calibration files can be obtained at: [Mathworks' Camera Calibration](https://www.mathworks.com/help/vision/ug/single-camera-calibrator-app.html#bt19jdq-1)<br/>
 
 
 ## Dependencies 
 In-built functions of Matlab, Computer Vision Toolbox. Code has been tested on Matlab 2018b across linux, MAC and Windows operating systems. <br/>
 
 ## Video tutorial and troubleshooting
-Video tutorials to use pose3d can be found at the below links:
+Video tutorials to use pose3d can be found at the below links: <br/>
 [Case 1: 3D reconstruction when calibrating with images](https://www.dropbox.com/s/zp2wh5ltzuwmsvo/Tutorial_with_calib_frames.mov?dl=0) <br/>
 [Case 2: For calibration with recorded videos](https://www.dropbox.com/s/fb7mas4fm20q4rj/Tutorial_with_calib_videos.mp4?dl=0) <br/>
 Pose3d incorporates message-based interaction to inform the user when problems are detected while using pose3d. This includes checking entries made by the user in the configuration file to check for congruency in the entered values. For instance, if the user sets number of cameras in the setup to 5 but provides lesser number of .csv files containing 2D tracked data, a message informing the user about this problem is provided. However, some problems can occur without producing explicit error messages and are listed below to help users with troubleshooting.

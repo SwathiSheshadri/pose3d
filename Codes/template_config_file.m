@@ -127,7 +127,7 @@ CalibrationImages_format = '.png';
 % images
 folderwithpngs = '/Users/username/CalibFiles/';
 
-%% You are now done with fill up the main parameters!!! edit below for post-processing
+%% Edit below for post-processing and data visualization
 % (Default setting we use are below.)
 % Do you want to undistort 2D coordinates?
 % If your lens have high distortion set this to 1
@@ -139,7 +139,7 @@ plotresults = 1; %plots resulting 3D coordinates at recorded fps
 
 
 path_to_2Dtracked_video = '.../*.mp4'; %full path of the 2D tracked video you want to visualize alongside 3D tracked results
-
+color_bw = 1; % 1 if video provided at above path in color and 0 for black and white
 
 nskip = 1; %min value nskip can take is 1, increase this when you have long recording (plots results from every nskip frames)
 

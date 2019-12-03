@@ -186,7 +186,9 @@ end
 %Loading DLC 2D tracked data
 function [data2d,data2dllh,flag_mis] = load_dlcdata(fullfilename,nframes,nfeatures,flag_mis)
     data2d = importdata(fullfilename);
-    data2d = data2d.data;
+    if isstruct(data2d) %case when excel contains column or row headers
+        data2d = data2d.data;
+    end
     data2d = data2d(:,2:end);
     data2dllh = data2d(:,3:3:end);
     data2d(:,3:3:end) = []; 
@@ -204,7 +206,10 @@ end
 %loaded 2D tracked data from other software
 function [data2d,flag_mis] = load_otherdata(fullfilename,nframes,nfeatures,flag_mis)
     data2d = importdata(fullfilename);
-    data2d = data2d.data;
+        
+    if isstruct(data2d) %case when excel contains column or row headers
+        data2d = data2d.data;
+    end
     
     if nframes~= size(data2d,1)
         flag_mis = 1;

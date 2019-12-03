@@ -25,7 +25,7 @@ exp_name = 'Experiment1'; % ./AllExperiments/Experiment1; **To be different for 
 %If you are using DeepLabCut for 2D tracking or if your 2D tracking software also
 %provides likelihood values ranging between 0 and 1 similar to DLC set this
 %variable to 1; otherwise set this to 0
-usingdlc = 1; %set to 0, if using other software
+usingdlc = 1; 
 
 %which mode of 3D reconstruction do you want to use
 % 1. 'all' (2D tracked data from all cameras is used for reconstruction

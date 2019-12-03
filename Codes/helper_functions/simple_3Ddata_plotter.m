@@ -76,10 +76,10 @@ if plotresults
         files = dir([path2Dtrackedimages_folder '/*' format_of_images]);
         if isempty(files) 
             flag_mis = 1;
-            uiwait(msgbox(sprintf(['No 2D tracked images found at the location indicated by config file']),'Problem detected'))
+            uiwait(msgbox(sprintf('No 2D tracked images found at the location indicated by config file'),'Problem detected'))
             return
         end
-        temp_info = imfinfo([files(t).folder '/' files(t).name]);
+        temp_info = imfinfo([files(1).folder '/' files(1).name]);
         if color_bw
             movie1 = zeros(temp_info.Height,temp_info.Width,3,length(1:nskip:nframes),'uint8');
         else

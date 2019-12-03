@@ -139,11 +139,19 @@ run_undistort = 0; %1: run undistort, 0: do not undistort
 % values so only a few example frames are vizualized while saving everything)
 plotresults = 1; %plots resulting 3D coordinates at recorded fps
 
+have2Dtrackedvideos = 1; %set this to 0 if you have 2D tracked images instead of videos
 
+%this variable is used when have2Dtrackedvideos is 1
 path_to_2Dtracked_video = '.../*.mp4'; %full path of the 2D tracked video you want to visualize alongside 3D tracked results
-color_bw = 1; % 1 if video provided at above path in color and 0 for black and white
 
-nskip = 1; %min value nskip can take is 1, increase this when you have long recording (plots results from every nskip frames)
+%below 2 variables are only needed when you have 2D tracked images instead
+%of videos
+path2Dtrackedimages_folder = '/Users/username/2DTrackedImageFiles/'; %full path to the folder holding 2D tracked images
+format_of_images = '.png'; %can also be '.tif','.jpeg' or any other format supported by imread function in matlab
+
+color_bw = 1; % 1 if video/images of 2D tracked data is in color and 0 for black and white
+
+nskip = 1; %(integer) min value nskip can take is 1, increase this when you have long recording (plots results from every nskip frames)
 
 % the DLC based likelihood value threshold
 llh_thresh = 0.9; %Can choose values between 0 and 1; 
@@ -157,11 +165,13 @@ drawline = [ 1 2; 2 3; 3 4; 4 1; 5 6;6 7;...
     7 8;8 5;1 5; 2 6;3 7; 4 8]; %0 : skeleton will not be drawn, Eg : [ 1 2; 2 3;], draws lines between features 1 and 2, 2 and 3 
 
 calc_error = 1; %to be set to 0 if ground truth lengths are not available
-ground_truth = [55 55 55 55 55 55 55 55 55 55 55 55] ; %enter line segment lengths 1xn vector (where n corresponds to the number of lines in the skeleton)
+ground_truth = [57 57 57 57 57 57 57 57 57 57 57 57] ; %enter line segment lengths 1xn vector (where n corresponds to the number of lines in the skeleton)
 
-nframes = rec_time*fps; %nothing to edit here onwards
 
-%% Some checks to make pose3d user-friendly
+%this variable is automatically calculated if you have videos and have entered video duration and fps
+nframes = rec_time*fps; %if you have taken images enter number of frames you have captured here eg: nframes = 120;
+
+%% Some checks to make pose3d user-friendly (nothing to edit here onwards)
 % Check if there are the right number csv of files & if all files are unique
 
 if ((length(unique(secondary2D_datafullpath))) ~= ncams-1 || (length(unique(primary2D_datafullpath)) ~= 1))

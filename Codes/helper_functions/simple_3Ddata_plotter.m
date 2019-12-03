@@ -52,24 +52,45 @@ if plotresults
     %% Vizualizing Rubik's Cube corners in 3D 
     %looping over time to plot cube reconstruction over different time points
     
+    if have2Dtrackedvideos == 1
+        
+        %Load your DLC labelled video file 
+        cam{1,1} = VideoReader(path_to_2Dtracked_video);
+
+        if color_bw
+            movie1 = zeros(cam{1,1}.Height,cam{1,1}.Width,3,length(1:nskip:size(coords3d,1)),'uint8');
+        else
+            movie1 = zeros(cam{1,1}.Height,cam{1,1}.Width,1,length(1:nskip:size(coords3d,1)),'uint8');
+        end
+
+        disp('Loading your video data. This could take awhile...')
+        disp('Please considering increasing nskip value on config file if the visualization takes too long')
+
+        k = 1;
+        for t =1:nskip:size(coords3d,1)
+            movie1(:,:,:,k) = read(cam{1,1}, t);
+            k = k+1;
+        end
     
-    %Load your DLC labelled video file 
-    cam{1,1} = VideoReader(path_to_2Dtracked_video);
-      
-    
-    if color_bw
-        movie1 = zeros(cam{1,1}.Height,cam{1,1}.Width,3,length(1:nskip:size(coords3d,1)),'uint8');
-    else
-        movie1 = zeros(cam{1,1}.Height,cam{1,1}.Width,1,length(1:nskip:size(coords3d,1)),'uint8');
-    end
-    
-    disp('Loading your video data. This could take awhile...')
-    disp('Please considering increasing nskip value on config file if the visualization takes too long')
-    
-    k = 1;
-    for t =1:nskip:size(coords3d,1)
-        movie1(:,:,:,k) = read(cam{1,1}, t);
-        k = k+1;
+    else %when you have 2D tracked images
+        files = dir([path2Dtrackedimages_folder '/*' format_of_images]);
+        if isempty(files) 
+            flag_mis = 1;
+            uiwait(msgbox(sprintf(['No 2D tracked images found at the location indicated by config file']),'Problem detected'))
+            return
+        end
+        temp_info = imfinfo([files(t).folder '/' files(t).name]);
+        if color_bw
+            movie1 = zeros(temp_info.Height,temp_info.Width,3,length(1:nskip:nframes),'uint8');
+        else
+            movie1 = zeros(temp_info.Height,temp_info.Width,1,length(1:nskip:nframes),'uint8');
+        end
+        k=1;
+        for t =1:nskip:length(files)
+            movie1(:,:,:,k) = imread([files(t).folder '/' files(t).name]);
+            k = k+1;
+        end
+        
     end
     
     

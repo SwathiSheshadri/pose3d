@@ -270,12 +270,9 @@ else
                 end
                 disp('Proceeding to 3D reconstruction...')
             case 'Redo Stereo Camera Calibration'
-                rmdir([exp_path '/' 'CalibSessionFiles/'],'s')
-                if exist([exp_path '/' exp_name '/UndistortedData2d/'],'dir')
-                    rmdir([exp_path '/' exp_name '/UndistortedData2d/'],'s') %if calibration is repeated undistortion also has to repeat
-                end
+
                 for icams = 1:ncams-1
-                    mkdir([exp_path '/' 'CalibSessionFiles/PrimarySecondary' num2str(icams) '/'])
+
                     if  ~flag_1primary
                         folder1 = [exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Primary/'];
                         folder2 = [exp_path '/' 'Imagesforcalibration/PrimarySecondary' num2str(icams) '/Secondary' num2str(icams) '/'];
@@ -283,19 +280,45 @@ else
                         folder1 = [exp_path '/' 'Imagesforcalibration/Primary/'];
                         folder2 = [exp_path '/' 'Imagesforcalibration/Secondary' num2str(icams) '/'];
                     end
+                    
                     try
-                        stereoCameraCalibrator(folder1, folder2, squareSize);
-                        CreateStruct.Interpreter = 'tex';
-                        CreateStruct.WindowStyle = 'non-modal';
-                         h = msgbox({'\fontsize{16}The main program is paused for Stereo Camera Calibrator GUI to run \bf(move this message box to a side leave it open and follow the below steps in the GUI)';''; '\rm1. Click \bfcalibrate';'';...
-                        '\rm2. From save menu in the GUI, \bfselect save session as';''; ['\rm3. Save session as calibrationSession.mat in folder \bf ./' exp_path '/' 'CalibSessionFiles/PrimarySecondary' num2str(icams) '/'];'';...
-                        '\rm4. Close GUI & \bfpress any key \rmto continue';'';'Tip : If reprojection errors are high for some calibration images, select outliers using GUI features, right click on detected outliers to remove them and recalibrate';'';},'Important steps to do next',CreateStruct);
+                        if exist([exp_path '/' 'CalibSessionFiles/PrimarySecondary' num2str(icams) '/calibrationSession.mat'],'file')
+                            stereoCameraCalibrator([exp_path '/' 'CalibSessionFiles/PrimarySecondary' num2str(icams) '/calibrationSession.mat'])
+                            answer = questdlg(['Previous calibration results are displayed in the calibrator window for camera pair ' num2str(icams) '. Do you want to keep these results or redo calibration for this pair?'],'Calibration helper', 'Keep results','Redo Stereo Camera Calibration','Redo Stereo Camera Calibration');
+                            switch answer
 
+                                case 'Redo Stereo Camera Calibration'
+                                    delete([exp_path '/' 'CalibSessionFiles/PrimarySecondary' num2str(icams) '/calibrationSession.mat'])
+                                    stereoCameraCalibrator(folder1, folder2, squareSize);
+                                    CreateStruct.Interpreter = 'tex';
+                                    CreateStruct.WindowStyle = 'non-modal';
+                                    h = msgbox({'\fontsize{16}The main program is paused for Stereo Camera Calibrator GUI to run \bf(move this message box to a side leave it open and follow the below steps in the GUI)';''; '\rm1. Click \bfcalibrate';'';...
+                                    '\rm2. From save menu in the GUI, \bfselect save session as';''; ['\rm3. Save session as calibrationSession.mat in folder \bf ./' exp_path '/' 'CalibSessionFiles/PrimarySecondary' num2str(icams) '/'];'';...
+                                    '\rm4. Close GUI & \bfpress any key \rmto continue';'';'Tip : If reprojection errors are high for some calibration images, select outliers using GUI features, right click on detected outliers to remove them and recalibrate';'';},'Important steps to do next',CreateStruct);
+                                    if exist([exp_path '/' exp_name '/UndistortedData2d/'],'dir')
+                                        rmdir([exp_path '/' exp_name '/UndistortedData2d/'],'s') %if calibration is repeated undistortion also has to repeat
+                                    end
+
+                                case 'Keep results'
+
+                            end
+                        else
+                            mkdir([exp_path '/' 'CalibSessionFiles/PrimarySecondary' num2str(icams) '/'])
+                            stereoCameraCalibrator(folder1, folder2, squareSize);
+                            CreateStruct.Interpreter = 'tex';
+                            CreateStruct.WindowStyle = 'non-modal';
+                            h = msgbox({'\fontsize{16}The main program is paused for Stereo Camera Calibrator GUI to run \bf(move this message box to a side leave it open and follow the below steps in the GUI)';''; '\rm1. Click \bfcalibrate';'';...
+                            '\rm2. From save menu in the GUI, \bfselect save session as';''; ['\rm3. Save session as calibrationSession.mat in folder \bf ./' exp_path '/' 'CalibSessionFiles/PrimarySecondary' num2str(icams) '/'];'';...
+                            '\rm4. Close GUI & \bfpress any key \rmto continue';'';'Tip : If reprojection errors are high for some calibration images, select outliers using GUI features, right click on detected outliers to remove them and recalibrate';'';},'Important steps to do next',CreateStruct);
+
+                        end
+                        
                     catch
                         flag_mis = 1;
                         msgbox(['Problem using Stereo Camera Calibrator for PrimarySecondary' num2str(icams) '. Check if images exist for calibration and are same in number for both primary and secondary cameras (in format readable by Stereo Camera Calibrator GUI)'],'Problem detected'); 
                         return
                     end
+                    
                     disp('Press any key to continue')
                     pause
                     if exist('h', 'var')

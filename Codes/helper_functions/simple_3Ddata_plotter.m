@@ -64,7 +64,7 @@ if plotresults
         end
 
         disp('Loading your video data. This could take awhile...')
-        disp('Please considering increasing nskip value on config file if the visualization takes too long')
+        disp('Please consider increasing nskip value on config file if the visualization takes too long')
 
         k = 1;
         for t =1:nskip:size(coords3d,1)

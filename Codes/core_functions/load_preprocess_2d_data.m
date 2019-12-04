@@ -52,7 +52,7 @@ for icams = 1:ncams-1 % since calibration is done pairwise, primary camera param
             [data2d,flag_mis] = load_otherdata(secondary2D_datafullpath{icams},nframes,nfeatures,flag_mis);
         end
         if flag_mis == 1 %case when the load_dlcdata function sets flag to 1
-            uiwait(msgbox(['Number of data entries in 2D tracked csv file at ' csvname.folder 'does not match specified duration of recording and frame rate in config file. Check and re-run main function'],'Problem detected'))
+            uiwait(msgbox(['Number of rows in 2D tracked csv file ' secondary2D_datafullpath{icams} ' does not match nframes in config file. Check and re-run main function'],'Problem detected'))
             return
         end
     else
@@ -67,7 +67,7 @@ for icams = 1:ncams-1 % since calibration is done pairwise, primary camera param
                 [data2d,flag_mis] = load_otherdata(secondary2D_datafullpath{icams},nframes,nfeatures,flag_mis);
             end
             if flag_mis == 1 %case when the load_dlcdata function sets flag to 1
-                uiwait(msgbox(['Number of data entries in 2D tracked csv file at ' csvname.folder 'does not match specified duration of recording and frame rate in config file. Check and re-run main function'],'Problem detected'))
+                uiwait(msgbox(['Number of rows in 2D tracked csv file ' secondary2D_datafullpath{icams} ' does not match nframes in config file. Check and re-run main function'],'Problem detected'))
                 return
             end
             temp = permute(reshape(data2d,nframes,2,nfeatures),[1 3 2]);
@@ -122,7 +122,7 @@ for icams = 1:ncams-1 % since calibration is done pairwise, primary camera param
                 [data2d,flag_mis] = load_otherdata(primary2D_datafullpath{1,1},nframes,nfeatures,flag_mis);
             end
             if flag_mis == 1 %case when the load_dlcdata function sets flag to 1
-                uiwait(msgbox(['Number of data entries in 2D tracked csv file at ' csvname.folder ' does not match specified duration of recording and frame rate in config file. Check and re-run main function to proceed'],'Problem detected'))
+                uiwait(msgbox(['Number of rows in 2D tracked csv file ' primary2D_datafullpath{1,1} ' does not match nframes in config file. Check and re-run main function'],'Problem detected'))
                 return
             end
 
@@ -137,7 +137,7 @@ for icams = 1:ncams-1 % since calibration is done pairwise, primary camera param
                     [data2d,flag_mis] = load_otherdata(primary2D_datafullpath{1,1},nframes,nfeatures,flag_mis);
                 end
                 if flag_mis == 1 %case when the load_dlcdata function sets flag to 1
-                    uiwait(msgbox(['Number of data entries in 2D tracked csv file at ' csvname.folder ' does not match specified duration of recording and frame rate in config file. Check and re-run main function to proceed'],'Problem detected'))
+                    uiwait(msgbox(['Number of rows in 2D tracked csv file ' primary2D_datafullpath{1,1} ' does not match nframes in config file. Check and re-run main function'],'Problem detected'))
                     return
                 end
                 temp = permute(reshape(data2d,nframes,2,nfeatures),[1 3 2]);

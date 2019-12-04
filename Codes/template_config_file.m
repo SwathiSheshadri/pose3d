@@ -42,8 +42,11 @@ modes_3drecon = {'all'}; %this is the recommended mode (other possible modes are
 nfeatures = 8; %Edit this to match your current experiment
 
 % Fill in precise duration of recording in **seconds** (eg: for our demo rec_time = 10;)
+%If you have acquired images and no videos during your experiment rec_time and fps values 
+%are not important (you can fill any number into them or leave blank). Make sure to enter the right value to variable
+%nframes in the section of this config file called "Edit below for
+%post-processing and data visualization"
 rec_time =  10; %Edit this to match your experiment recording time 
-
 % Fill in frames per second (eg: for our demo fps = 100;)
 fps =100; %Edit this to match your current experiment**
 
@@ -169,7 +172,11 @@ ground_truth = [57 57 57 57 57 57 57 57 57 57 57 57] ; %enter line segment lengt
 
 
 %this variable is automatically calculated if you have videos and have entered video duration and fps
-nframes = rec_time*fps; %if you have taken images enter number of frames you have captured here eg: nframes = 120;
+if have2Dtrackedvideos
+    nframes = rec_time*fps; %nframes is calculated for you if you have acquired videos for tracking
+else
+    nframes = 1; %to be filled by users who have images and not videos
+end
 
 %% Some checks to make pose3d user-friendly (nothing to edit here onwards)
 % Check if there are the right number csv of files & if all files are unique
@@ -208,9 +215,9 @@ else
     flag_1primary = 0;
 end
 
-if nskip == 0 || fps == 0 
+if nskip == 0 
     flag_mis = 1;
-    uiwait(msgbox('nskip, fps cannot be 0. Change this and re-run main program to proceed.'))
+    uiwait(msgbox('nskip cannot be 0. Change this and re-run main program to proceed.'))
 end
 
 if usingdlc

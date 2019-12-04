@@ -130,7 +130,11 @@ if plotresults
         set(ha(2),'xtick',[],'ytick',[],'ztick',[])
         drawnow
         
-        pause(nskip/fps) 
+        if have2Dtrackedvideos == 1
+            pause(nskip/fps) 
+        else
+            pause(0.1)
+        end
                      
         if toc > 60 %after every 60 seconds prompts user to check if she/he wants to stop watching movie
             answer = questdlg('Stop watching movie and save all results?','Save results?','Yes, save results', ...

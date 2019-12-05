@@ -15,12 +15,12 @@
 % Therefore, everytime you move cameras or record from a different setup
 % change this name, otherwise you can keep this fixed
 
-exp_path = 'AllExperiments'; %./AllExperiments **To be different for every new camera configuration/experiment setup**
+exp_path = 'AllExperiments'; %./AllExperiments ** This name needs to be different only when you want to use different calibration data**
 
 % exp_name holds the name of the session of your experiment 
 % this is created as a folder withint exp_path directory by pose3d for your session specific data files
 
-exp_name = 'Experiment1'; % ./AllExperiments/Experiment1; **To be different for every new experiment**
+exp_name = 'Experiment1'; % ./AllExperiments/Experiment1; **This name is to be different for every new experiment**
 
 %If you are using DeepLabCut for 2D tracking or if your 2D tracking software also
 %provides likelihood values ranging between 0 and 1 similar to DLC set this
@@ -163,7 +163,7 @@ whichfilter = 2; % 0: No filter; 1: moving average; 2:median filter (if you obse
 npoints = 5;%number of data points to use for filter (if you choose 1 or 2 for which filter this value has to be filled)  
 
 % To draw a stick diagram/skeleton, list point pairs you want to join 
-% If you don't want to draw skeleton, set this to 0
+% ** This variable is required if you want to calculate error **
 drawline = [ 1 2; 2 3; 3 4; 4 1; 5 6;6 7;...
     7 8;8 5;1 5; 2 6;3 7; 4 8]; %0 : skeleton will not be drawn, Eg : [ 1 2; 2 3;], draws lines between features 1 and 2, 2 and 3 
 

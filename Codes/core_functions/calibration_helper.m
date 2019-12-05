@@ -285,9 +285,12 @@ else
                         if exist([exp_path '/' 'CalibSessionFiles/PrimarySecondary' num2str(icams) '/calibrationSession.mat'],'file')
                             stereoCameraCalibrator([exp_path '/' 'CalibSessionFiles/PrimarySecondary' num2str(icams) '/calibrationSession.mat'])
                             answer = questdlg(['Previous calibration results are displayed in the calibrator window for camera pair ' num2str(icams) '. Do you want to keep these results or redo calibration for this pair?'],'Calibration helper', 'Keep results','Redo Stereo Camera Calibration','Redo Stereo Camera Calibration');
+                            
                             switch answer
 
                                 case 'Redo Stereo Camera Calibration'
+                                    msgbox('The current calibrator GUI can now be closed (if you have not yet closed it). Proceeding to recalibrate.')
+                                    pause(10)
                                     delete([exp_path '/' 'CalibSessionFiles/PrimarySecondary' num2str(icams) '/calibrationSession.mat'])
                                     stereoCameraCalibrator(folder1, folder2, squareSize);
                                     CreateStruct.Interpreter = 'tex';
@@ -300,6 +303,7 @@ else
                                     end
 
                                 case 'Keep results'
+                                    msgbox('The current calibrator GUI can now be closed (if you have not yet closed it). Press any key to move to the next pair.')
 
                             end
                         else

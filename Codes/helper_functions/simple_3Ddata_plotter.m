@@ -133,7 +133,7 @@ if plotresults
         if have2Dtrackedvideos == 1
             pause(nskip/fps) 
         else
-            pause(0.1)
+            pause(0.05)
         end
                      
         if toc > 60 %after every 60 seconds prompts user to check if she/he wants to stop watching movie

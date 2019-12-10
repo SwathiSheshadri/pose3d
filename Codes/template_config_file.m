@@ -41,15 +41,6 @@ modes_3drecon = {'all'}; %this is the recommended mode (other possible modes are
 % Change this to match your current experiment
 nfeatures = 8; %Edit this to match your current experiment
 
-% % Fill in precise duration of recording in **seconds** (eg: for our demo rec_time = 10;)
-% %If you have acquired images and no videos during your experiment rec_time and fps values 
-% %are not important (you can fill any number into them or leave blank). Make sure to enter the right value to variable
-% %nframes in the section of this config file called "Edit below for
-% %post-processing and data visualization"
-% rec_time =  10; %Edit this to match your experiment recording time 
-% % Fill in frames per second (eg: for our demo fps = 100;)
-% fps =100; %Edit this to match your current experiment**
-
 % Fill in the overall number of cameras in your experiment (for our demo we had 5 cameras)
 % Change this to the number of cameras you have in your setup
 ncams = 5; %Edit this to match your current experiment (minimum allowed value is 2)
@@ -155,7 +146,8 @@ have2Dtrackedimages = 0; %set this to 1 if you have 2D tracked images instead of
 path_to_2Dtracked_video = '.../*.mp4'; %full path of the 2D video you have tracked from **primary camera** to visualize alongside 3D tracked results
 
 %below 2 variables are only needed when you have 2D tracked images instead
-%of videos (provide path to images tracked by primary camera
+%of videos (provide path to images tracked by primary camera)
+
 path2Dtrackedimages_folder = '/Users/username/2DTrackedImageFiles/'; %full path to the folder holding 2D tracked images from **primary camera**
 format_of_images = '.png'; %can also be '.tif','.jpeg' or any other format supported by imread function in matlab
 
@@ -184,17 +176,29 @@ ground_truth = [57 57 57 57 57 57 57 57 57 NaN 57 57] ;
 
 %this variable is automatically calculated if you have videos and have entered video duration and fps
 if have2Dtrackedvideos
+    
     try
         temp = VideoReader(path_to_2Dtracked_video);
     catch
         flag_mis = 1;
         uiwait(msgbox('have2Dtrackedvideos is set however path to a 2D tracked video is not properly defined or has a wrong video format. Change this and re-run main program to proceed.'))
     end
+    
     rec_time = temp.Duration;
     fps = temp.Framerate;
-    nframes = rec_time*fps; %nframes is calculated for you if you have acquired videos for tracking
-elseif have2Dtrackedimages
-    nframes = 1000; %to be filled by users who have images and not videos
+    nframes = rec_time*fps; 
+    
+elseif have2Dtrackedimages 
+    
+    files = dir([path2Dtrackedimages_folder '/*' format_of_images]);
+    if isempty(files) 
+        flag_mis = 1;
+        uiwait(msgbox(sprintf('No 2D tracked images found at the location indicated by config file'),'Problem detected'))
+    return
+    end
+    
+    nframes = length(files);
+    
 end
 
 %% Some checks to make pose3d user-friendly (nothing to edit here onwards)
@@ -314,14 +318,14 @@ if plotresults
                 try
                     movie1 = zeros(temp_info.Height,temp_info.Width,3,length(1:nskip:nframes),'uint8');
                 catch
-                    uiwait(msgbox('Images are too large and too many for quick visualization, default visualization of 3D reonstructed data is enabled (Try increasing nskip in the config file or use function make_illustrative_movie.m in the repository instead)'))
+                    uiwait(msgbox('Images are too large and too many for quick visualization, default visualization of 3D reonstructed data is enabled (Try increasing nskip in the config file)'))
                     have2Dtrackedimages = 0;
                 end
             else
                 try
                     movie1 = zeros(temp_info.Height,temp_info.Width,1,length(1:nskip:nframes),'uint8');
                 catch
-                    uiwait(msgbox('Images are too large and too many for quick visualization, default visualization of 3D reonstructed data is enabled (Try increasing nskip in the config file or use function make_illustrative_movie.m in the repository instead)'))
+                    uiwait(msgbox('Images are too large and too many for quick visualization, default visualization of 3D reonstructed data is enabled (Try increasing nskip in the config file)'))
                     have2Dtrackedimages = 0;
                 end
             end

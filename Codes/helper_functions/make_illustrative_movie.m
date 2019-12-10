@@ -17,8 +17,10 @@ clear
 close all
 clc
 
-%%Take initialized values from config file
-testing_config_file %call your config file here
+%% Take initialized values from config file
+template_config_file %call your config file here
+
+%% Enter paths to the videos and corresponding csv 2D tracked files to visualize
 
 load([exp_path '/' exp_name '/Data3d/Data3d.mat'],'coords3d')
 coords3dall = coords3d;
@@ -60,7 +62,7 @@ if ~exist([exp_path '/' exp_name '/Videos/'],'dir')
     mkdir([exp_path '/' exp_name '/Videos/'])
 end
 vidfile = VideoWriter([exp_path '/' exp_name '/Videos/' exp_name '2D_3Dmovie.avi']);
-vidfile.FrameRate = fps;
+vidfile.FrameRate = cam{1,1}.Framerate;
 open(vidfile)
     
 subplot_cols = size(cam,1)+1;

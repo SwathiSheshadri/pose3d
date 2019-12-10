@@ -174,7 +174,7 @@ calc_error = 1; %to be set to 0 if ground truth lengths are not available
 %skeleton, enter NaN for the corresponding line-segment
 ground_truth = [57 57 57 57 57 57 57 57 57 NaN 57 57] ; 
 
-%this variable is automatically calculated if you have videos and have entered video duration and fps
+
 if have2Dtrackedvideos
     
     try

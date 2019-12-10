@@ -41,14 +41,14 @@ modes_3drecon = {'all'}; %this is the recommended mode (other possible modes are
 % Change this to match your current experiment
 nfeatures = 8; %Edit this to match your current experiment
 
-% Fill in precise duration of recording in **seconds** (eg: for our demo rec_time = 10;)
-%If you have acquired images and no videos during your experiment rec_time and fps values 
-%are not important (you can fill any number into them or leave blank). Make sure to enter the right value to variable
-%nframes in the section of this config file called "Edit below for
-%post-processing and data visualization"
-rec_time =  10; %Edit this to match your experiment recording time 
-% Fill in frames per second (eg: for our demo fps = 100;)
-fps =100; %Edit this to match your current experiment**
+% % Fill in precise duration of recording in **seconds** (eg: for our demo rec_time = 10;)
+% %If you have acquired images and no videos during your experiment rec_time and fps values 
+% %are not important (you can fill any number into them or leave blank). Make sure to enter the right value to variable
+% %nframes in the section of this config file called "Edit below for
+% %post-processing and data visualization"
+% rec_time =  10; %Edit this to match your experiment recording time 
+% % Fill in frames per second (eg: for our demo fps = 100;)
+% fps =100; %Edit this to match your current experiment**
 
 % Fill in the overall number of cameras in your experiment (for our demo we had 5 cameras)
 % Change this to the number of cameras you have in your setup
@@ -142,15 +142,23 @@ run_undistort = 0; %1: run undistort, 0: do not undistort
 % values so only a few example frames are vizualized while saving everything)
 plotresults = 1; %plots resulting 3D coordinates at recorded fps
 
-have2Dtrackedvideos = 1; %set this to 0 if you have 2D tracked images instead of videos
+%setting both have2Dtrackedvideos and have2Dtrackedimages to 0, lets you
+%visualize only the 3D reconstructed data. 
+%It is recommended to set have2Dtrackedvideos and have2Dtrackedimages to 0, if your video/images size is larger than your working memory use
+%make_illustrative_movie.m function in the repository for 3D reconstruction
+%visualization alongside 2D video/images
+have2Dtrackedvideos = 1; %set this to 1 if you have 2D tracked videos
+have2Dtrackedimages = 0; %set this to 1 if you have 2D tracked images instead of videos
 
-%this variable is used when have2Dtrackedvideos is 1
-path_to_2Dtracked_video = '.../*.mp4'; %full path of the 2D tracked video you want to visualize alongside 3D tracked results
+%this variable is used when have2Dtrackedvideos is 1 (provide path to
+%primary camera video here)
+path_to_2Dtracked_video = '.../*.mp4'; %full path of the 2D video you have tracked from **primary camera** to visualize alongside 3D tracked results
 
 %below 2 variables are only needed when you have 2D tracked images instead
-%of videos
-path2Dtrackedimages_folder = '/Users/username/2DTrackedImageFiles/'; %full path to the folder holding 2D tracked images
+%of videos (provide path to images tracked by primary camera
+path2Dtrackedimages_folder = '/Users/username/2DTrackedImageFiles/'; %full path to the folder holding 2D tracked images from **primary camera**
 format_of_images = '.png'; %can also be '.tif','.jpeg' or any other format supported by imread function in matlab
+
 
 color_bw = 1; % 1 if video/images of 2D tracked data is in color and 0 for black and white
 
@@ -168,14 +176,25 @@ drawline = [ 1 2; 2 3; 3 4; 4 1; 5 6;6 7;...
     7 8;8 5;1 5; 2 6;3 7; 4 8]; %0 : skeleton will not be drawn, Eg : [ 1 2; 2 3;], draws lines between features 1 and 2, 2 and 3 
 
 calc_error = 1; %to be set to 0 if ground truth lengths are not available
-ground_truth = [57 57 57 57 57 57 57 57 57 57 57 57] ; %enter line segment lengths 1xn vector (where n corresponds to the number of lines in the skeleton)
 
+%enter line segment lengths 1xn vector (where n corresponds to the number of lines in the skeleton)
+%If you don't have ground truth for some of the line-segments on the
+%skeleton, enter NaN for the corresponding line-segment
+ground_truth = [57 57 57 57 57 57 57 57 57 NaN 57 57] ; 
 
 %this variable is automatically calculated if you have videos and have entered video duration and fps
 if have2Dtrackedvideos
+    try
+        temp = VideoReader(path_to_2Dtracked_video);
+    catch
+        flag_mis = 1;
+        uiwait(msgbox('have2Dtrackedvideos is set however path to a 2D tracked video is not properly defined or has a wrong video format. Change this and re-run main program to proceed.'))
+    end
+    rec_time = temp.Duration;
+    fps = temp.Framerate;
     nframes = rec_time*fps; %nframes is calculated for you if you have acquired videos for tracking
-else
-    nframes = 1; %to be filled by users who have images and not videos
+elseif have2Dtrackedimages
+    nframes = 1000; %to be filled by users who have images and not videos
 end
 
 %% Some checks to make pose3d user-friendly (nothing to edit here onwards)
@@ -256,3 +275,56 @@ if ~exist('flag_mis','var')
     flag_mis = 0; %Nothing to flag, checks passed
 end
 
+%To check if fast visualization of movies is possible and defualt to
+%visualizing only 3D reconstructed results if movie files are too large
+if plotresults
+    
+    if have2Dtrackedvideos 
+
+            %Load your DLC labelled video file 
+            cam{1,1} = VideoReader(path_to_2Dtracked_video);
+
+            if color_bw
+                try
+                    movie1 = zeros(cam{1,1}.Height,cam{1,1}.Width,3,length(1:nskip: nframes),'uint8');
+                catch
+                    uiwait(msgbox('Movie file is too large for quick visualization, default visualization of 3D reonstructed data is enabled (Try increasing nskip in the config file or use function make_illustrative_movie.m in the repository instead)'))
+                    have2Dtrackedvideos = 0;
+                end
+            else
+                try
+                    movie1 = zeros(cam{1,1}.Height,cam{1,1}.Width,1,length(1:nskip: nframes),'uint8');
+                catch
+                    uiwait(msgbox('Movie file is too large for quick visualization, default visualization of 3D reonstructed data is enabled (Try increasing nskip in the config file or use function make_illustrative_movie.m in the repository instead)'))
+                    have2Dtrackedvideos = 0;
+                end
+            end
+     end
+
+     if have2Dtrackedimages %when you have 2D tracked images
+
+            files = dir([path2Dtrackedimages_folder '/*' format_of_images]);
+            if isempty(files) 
+                flag_mis = 1;
+                uiwait(msgbox(sprintf('No 2D tracked images found at the location indicated by config file'),'Problem detected'))
+                return
+            end
+            temp_info = imfinfo([files(1).folder '/' files(1).name]);
+            if color_bw
+                try
+                    movie1 = zeros(temp_info.Height,temp_info.Width,3,length(1:nskip:nframes),'uint8');
+                catch
+                    uiwait(msgbox('Images are too large and too many for quick visualization, default visualization of 3D reonstructed data is enabled (Try increasing nskip in the config file or use function make_illustrative_movie.m in the repository instead)'))
+                    have2Dtrackedimages = 0;
+                end
+            else
+                try
+                    movie1 = zeros(temp_info.Height,temp_info.Width,1,length(1:nskip:nframes),'uint8');
+                catch
+                    uiwait(msgbox('Images are too large and too many for quick visualization, default visualization of 3D reonstructed data is enabled (Try increasing nskip in the config file or use function make_illustrative_movie.m in the repository instead)'))
+                    have2Dtrackedimages = 0;
+                end
+            end
+     end
+     
+end

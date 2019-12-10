@@ -22,9 +22,6 @@ if usingdlc
 end
 
 %% 3D reconstruction using 2D coordinates tracked from every camera with    
-% coords3dall = nan(nframes,3*nfeatures); %one-shot 3D reconstruction
-% coords3dbp = nan(nframes,3*nfeatures); %3D reconstructed from best pair
-% coords3davg = nan(nframes,3*nfeatures); %averaging 3D reconstructions over pairs
 
 coords3d = nan(nframes,3*nfeatures,length(modes_3drecon));
 

@@ -52,16 +52,7 @@ if plotresults
     %% Vizualizing Rubik's Cube corners in 3D 
     %looping over time to plot cube reconstruction over different time points
     
-    if have2Dtrackedvideos == 1
-        
-        %Load your DLC labelled video file 
-        cam{1,1} = VideoReader(path_to_2Dtracked_video);
-
-        if color_bw
-            movie1 = zeros(cam{1,1}.Height,cam{1,1}.Width,3,length(1:nskip:size(coords3d,1)),'uint8');
-        else
-            movie1 = zeros(cam{1,1}.Height,cam{1,1}.Width,1,length(1:nskip:size(coords3d,1)),'uint8');
-        end
+    if have2Dtrackedvideos 
 
         disp('Loading your video data. This could take awhile...')
         disp('Please consider increasing nskip value on config file if the visualization takes too long')
@@ -72,18 +63,13 @@ if plotresults
             k = k+1;
         end
     
-    else %when you have 2D tracked images
+    elseif have2Dtrackedimages %when you have 2D tracked images
+        
         files = dir([path2Dtrackedimages_folder '/*' format_of_images]);
         if isempty(files) 
             flag_mis = 1;
             uiwait(msgbox(sprintf('No 2D tracked images found at the location indicated by config file'),'Problem detected'))
             return
-        end
-        temp_info = imfinfo([files(1).folder '/' files(1).name]);
-        if color_bw
-            movie1 = zeros(temp_info.Height,temp_info.Width,3,length(1:nskip:nframes),'uint8');
-        else
-            movie1 = zeros(temp_info.Height,temp_info.Width,1,length(1:nskip:nframes),'uint8');
         end
         k=1;
         for t =1:nskip:length(files)
@@ -91,18 +77,28 @@ if plotresults
             k = k+1;
         end
         
+           
     end
     
-    
-    figure1 = figure('units','normalized','OuterPosition',[0.044 0.206 0.4 0.4]);
-    colorclass = colormap(jet); %jet is default in DLC 
-    color_map_self=colorclass(ceil(linspace(1,64,nfeatures)),:);
 
-    % Create axes for 3D reconstructed data
-    ha(1) = axes('Parent',figure1,'Position',[0.08 0.1 0.4 0.8]);
     
-    % Create axes for camera 2 data
-    ha(2) = axes('Parent',figure1,'Position',[0.55 0.1 0.4 0.8]);
+    if have2Dtrackedvideos || have2Dtrackedimages
+        figure1 = figure('units','normalized','OuterPosition',[0.044 0.206 0.4 0.4]);
+        colorclass = colormap(jet); %jet is default in DLC 
+        color_map_self=colorclass(ceil(linspace(1,64,nfeatures)),:);
+        
+        % Create axes for 3D reconstructed data
+        ha(1) = axes('Parent',figure1,'Position',[0.08 0.1 0.4 0.8]);
+
+        % Create axes for camera 2 data
+        ha(2) = axes('Parent',figure1,'Position',[0.55 0.1 0.4 0.8]);
+    
+    else
+        figure1 =figure('units','normalized','OuterPosition',[0.044 0.206 0.5 0.8]);
+        colorclass = colormap(jet); %jet is default in DLC 
+        color_map_self=colorclass(ceil(linspace(1,64,nfeatures)),:);
+        ha(1) = axes('Parent',figure1,'Position',[0.1 0.1 0.8 0.8]);
+    end
     
     tic
     k = 1;
@@ -118,7 +114,7 @@ if plotresults
             end
         end
         hold off  
-        set(ha(1),'view',[-127.1,21.8],'xlim',[xmin xmax],'ylim',[ymin ymax],'zlim',[zmin zmax],'Zdir', 'reverse','Ydir', 'reverse')
+        set(ha(1),'view',[-127.1,21.8],'Zdir', 'reverse','Ydir', 'reverse')
         title(sprintf(['3D reconstruction of features from ' num2str(ncams) ' cameras']))
 
         %view to be set to suit the object being tracked 
@@ -126,14 +122,18 @@ if plotresults
         %views to suit your data)
         set(ha(1),'xtick',[],'ytick',[],'ztick',[],'xlim',[xmin xmax],'ylim',[ymin ymax],'zlim',[zmin zmax]) %change view and axis limits to suit your data
         
-        imagesc(movie1(:,:,:,k),'Parent', ha(2))
-        set(ha(2),'xtick',[],'ytick',[],'ztick',[])
+        if have2Dtrackedvideos || have2Dtrackedimages
+            imagesc(movie1(:,:,:,k),'Parent', ha(2))
+            hold on
+            scatter(DataAll(t,1:2:2*nfeatures,ncams),DataAll(t,2:2:2*nfeatures,ncams),250*ones(1,nfeatures),color_map_self(1:nfeatures,:),'filled','Parent', ha(2)); 
+            set(ha(2),'xtick',[],'ytick',[],'ztick',[])
+        end
         drawnow
         
         if have2Dtrackedvideos == 1
-            pause(nskip/fps) 
+            pause(nskip/cam{1,1}.Framerate) 
         else
-            pause(0.05)
+            pause(0.1)
         end
                      
         if toc > 60 %after every 60 seconds prompts user to check if she/he wants to stop watching movie
@@ -199,6 +199,7 @@ if calc_error == 1
         avgerrorall = nanmean(temperror(:));
         stderrorall = nanstd(temperror(:));
         disp(['Average error (mm) for reconstruction with mode ' modes_3drecon{imodes} ':' num2str(avgerrorall) ' ' char(177) ' ' num2str(stderrorall)])
+        disp('Error values corresponding to individual time-points and line-segments on the skeleton available in the workspace variable errorinrecond(timeXlinesegmentsXmodes_of_3Dreconstruction)')
 
     end
     

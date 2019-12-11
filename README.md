@@ -61,8 +61,8 @@ In-built functions of Matlab, Computer Vision Toolbox. Code has been tested on M
 
 ## Video tutorial and troubleshooting
 Video tutorials to use pose3d can be found at the below links: <br/>
-[Case 1: 3D reconstruction when calibrating with images](https://www.dropbox.com/s/zp2wh5ltzuwmsvo/Tutorial_with_calib_frames.mov?dl=0) <br/>
-[Case 2: For calibration with recorded videos](https://www.dropbox.com/s/fb7mas4fm20q4rj/Tutorial_with_calib_videos.mp4?dl=0) <br/>
+[Case 1: 3D reconstruction when calibrating with images](https://www.dropbox.com/s/o3nitei9nepml0b/Tutorial_with_calib_frames.mp4?dl=0) <br/>
+[Case 2: For calibration with recorded videos](https://www.dropbox.com/s/27sz775y63yys0g/Tutorial_with_calib_videos.mp4?dl=0) <br/>
 Pose3d incorporates message-based interaction to inform the user when problems are detected while using pose3d. This includes checking entries made by the user in the configuration file to check for congruency in the entered values. For instance, if the user sets number of cameras in the setup to 5 but provides lesser number of .csv files containing 2D tracked data, a message informing the user about this problem is provided. However, some problems can occur without producing explicit error messages and are listed below to help users with troubleshooting.
 1) Mismatch in the correspondence between 2D tracked .csv files and calibration files. <br/>
 -- This issue can occur when the user is editing the configuration file to enter his/her experiment details. When entering file names into variables secondary2D_datafullpath and calibvideos_secondary, the order in which the files corresponding to secondary cameras is entered must be maintained. Otherwise, there will be failure in 3D reconstruction since data from one camera will be transformed using camera matrix of a different camera. To avoid this problem, ensure that the order of 2D data files and calibration files is maintained. See the comments in the template config file for more details. <br/>
@@ -82,5 +82,5 @@ For questions on the toolbox and citation please contact us at swathishesh@gmail
 
 ## Acknowledgements
 We are very thankful to Mackenzie Mathis and Alexander Mathis for their help in getting us going with using vision based tracking with DLC. Discussions with several colleagues at the German Primate Center including Andrej Fillipow, Michael Berger, Sebastian Mueller, Attila Trunk and Daniela Buchwald were very useful for the development of our tracking experimental setup. Thanks also to Viktorija Schek for testing out some of our implementations. 
-Our implementation in Matlab was inspired by [Anipose](https://github.com/lambdaloop/anipose) - a python toolbox for 3D reconstruction. 
+Our implementation in Matlab was inspired partly by [Anipose](https://github.com/lambdaloop/anipose) - a python toolbox for 3D reconstruction. 
 

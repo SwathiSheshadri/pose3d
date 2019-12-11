@@ -135,11 +135,11 @@ plotresults = 1; %plots resulting 3D coordinates at recorded fps
 
 %setting both have2Dtrackedvideos and have2Dtrackedimages to 0, lets you
 %visualize only the 3D reconstructed data. 
-%It is recommended to set have2Dtrackedvideos and have2Dtrackedimages to 0, if your video/images size is larger than your working memory use
-%make_illustrative_movie.m function in the repository for 3D reconstruction
-%visualization alongside 2D video/images
-have2Dtrackedvideos = 1; %set this to 1 if you have 2D tracked videos
-have2Dtrackedimages = 0; %set this to 1 if you have 2D tracked images instead of videos
+%It is recommended to set have2Dtrackedvideos and have2Dtrackedimages to 0, 
+%if you want to only visualize 3D reconstructed data only (this is faster)
+
+have2Dtrackedvideos = 1; %set this to 1 if you have 2D tracked videos and 0 if you dont have videos you want to visualize next to 3D results
+have2Dtrackedimages = 0; %set this to 1 if you have 2D tracked images instead of videos and 0 if you dont have images you want to visualize next to 3D results
 
 %this variable is used when have2Dtrackedvideos is 1 (provide path to
 %primary camera video here)

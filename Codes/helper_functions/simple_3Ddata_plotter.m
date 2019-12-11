@@ -181,8 +181,8 @@ if calc_error == 1
 
 %Edge length reconstruction initialization
 
-    recondata = nan(nframes,size(drawline,1),length(modes_3drecon));
-    errorinrecon = nan(nframes,size(drawline,1),length(modes_3drecon));
+    recondata = nan(size(coords3d,1),size(drawline,1),length(modes_3drecon));
+    errorinrecon = nan(size(coords3d,1),size(drawline,1),length(modes_3drecon));
 
     for imodes = 1:length(modes_3drecon)
 

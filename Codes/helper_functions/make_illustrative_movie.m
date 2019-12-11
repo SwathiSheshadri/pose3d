@@ -1,8 +1,11 @@
 % make_illustrative_movie.m (example code to make movies containing 2D and
-% 3D tracked data as shown in Figure 1 of the repository readme.md file
+% 3D tracked data as shown in Figure 1 of the repository readme.md file)
 %
 % Compute 3D data first before running this code for your experiment
-% This function plots 3D reconstruction data alongside 2D tracking performed from all cameras
+% This function plots 3D reconstruction data alongside 2D tracking
+% performed from select cameras (user can choose which ones to plot but
+% providing the corresponding paths in the tracked_videos OR
+% path2Dtrackedimages_folders variables
 % In addition this function makes a movie of the same
 %
 % Copyright (c) 2019 Swathi Sheshadri
@@ -21,28 +24,39 @@ clc
 template_config_file %call your config file here
 
 %% Enter paths to the videos and corresponding csv 2D tracked files to visualize
+%user input is requested here again to allow users to flexibly select 
+%the cameras in the set up they want include for visualization 
+%Please ensure that have2Dtrackedvideos OR have2Dtrackedimages is set in
+%your config file before running this code
+if have2Dtrackedvideos
+%path to the videos you want to visualize next to 3D tracked data 
+tracked_videos = [{'Fullpath/video1.mp4';};...    %this variable is only to be filled when you have acquired videos for tracking
+                  {'Fullpath/video2.mp4';};];
+ncams_to_display = size(tracked_videos,1);   
+elseif have2Dtrackedimages
+path2Dtrackedimages_folders = [{'Fullpath/ImagesCam1/';};...    %this variable is only to be filled when you have acquired images for tracking
+                               {'Fullpath/ImagesCam2/';};];
+format_of_images = '.png';  %change this to the format of your images
+ncams_to_display = size(path2Dtrackedimages_folders,1);   
+end
+
+%path 2D tracked csv files of the videos provided above
+path_to_csv = [{'Fullpath/DataCam1.csv'};... %provide csv file order should
+               {'Fullpath/DataCam2.csv'};]; %correspond to the movie file order;
+
+%% Plotter (no more user input needed here onwards)
+          
 
 load([exp_path '/' exp_name '/Data3d/Data3d.mat'],'coords3d')
-coords3dall = coords3d;
+coords3dall = coords3d(:,:,1); %plots results from the first mode selected in your config file
 
 %Code to visualize 2d videos with 3d reconstruction results
 figure('units','normalized','outerposition',[0 0 1 0.5])
 colorclass = colormap(jet); %jet is default in DLC to-date
 color_map_self=colorclass(ceil(linspace(1,64,nfeatures)),:);
 
-
-
-%path to the videos you want to visualize next to 3D tracked data 
-tracked_videos = [{'Fullpath/Video1.mp4';};...    
-                  {'Fullpath/Video2.mp4';};...   
-                  {'Fullpath/Video3.mp4';}];
-
-%path 2D tracked csv files of the videos provided above
-path_to_csv = [{'Fullpath/csvfileofVideo1.csv'};... %provide csv file order should
-               {'Fullpath/csvfileofVideo2.csv'};... %correspond to the movie file order 
-               {'Fullpath/csvfileofVideo3.csv'};];
                           
-ncams_to_display = size(tracked_videos,1);              
+           
 cam = cell(ncams_to_display ,1);
 DataAll = nan(nframes,nfeatures*2,ncams_to_display ) ;
 
@@ -54,7 +68,12 @@ else
     [data2d,flag_mis] = load_otherdata(path_to_csv{icams},nframes,nfeatures,flag_mis);
 end
     DataAll(:,:,icams) = data2d;
-    cam{icams,1} = VideoReader([tracked_videos{icams,1}]);
+    if have2Dtrackedvideos
+        cam{icams,1} = VideoReader([tracked_videos{icams,1}]);
+    end
+    if have2Dtrackedimages
+       imagespath{icams,1} = dir([path2Dtrackedimages_folders{icams,1} '*' format_of_images]);
+    end
 end
 
 %to make video
@@ -62,7 +81,11 @@ if ~exist([exp_path '/' exp_name '/Videos/'],'dir')
     mkdir([exp_path '/' exp_name '/Videos/'])
 end
 vidfile = VideoWriter([exp_path '/' exp_name '/Videos/' exp_name '2D_3Dmovie.avi']);
-vidfile.FrameRate = cam{1,1}.Framerate;
+
+if have2Dtrackedvideos
+    vidfile.FrameRate = cam{1,1}.Framerate; %for images default frame rate of 30 is applied
+end
+
 open(vidfile)
     
 subplot_cols = size(cam,1)+1;
@@ -94,7 +117,11 @@ for i =1:1:size(coords3dall,1)
   
     for n = 1:size(cam,1)
         subplot(1,subplot_cols,n+1)
-        b = read(cam{n,1}, i);
+        if have2Dtrackedvideos
+            b = read(cam{n,1}, i);
+        else
+            b = imread([imagespath{n,1}(i).folder '/' imagespath{n,1}(i).name]);
+        end
         imshow(b)
         hold on
         scatter(DataAll(i,1:2:2*nfeatures,n),DataAll(i,2:2:2*nfeatures,n),100*ones(1,nfeatures),color_map_self(1:nfeatures,:),'filled'); 

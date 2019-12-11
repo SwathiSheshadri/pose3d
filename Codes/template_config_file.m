@@ -182,6 +182,7 @@ if have2Dtrackedvideos
     catch
         flag_mis = 1;
         uiwait(msgbox('have2Dtrackedvideos is set however path to a 2D tracked video is not properly defined or has a wrong video format. Change this and re-run main program to proceed.'))
+        return
     end
     
     rec_time = temp.Duration;
@@ -275,8 +276,10 @@ if ~iscell(primary2D_datafullpath)
     uiwait(msgbox('primary2D_datafullpath must be cell type. Change this and re-run main program to proceed.'))
 end
 
-if ~exist('flag_mis','var')
-    flag_mis = 0; %Nothing to flag, checks passed
+
+if have2Dtrackedvideos && have2Dtrackedimages
+    flag_mis = 1;
+    uiwait(msgbox('Variables have2Dtrackedvideos & have2Dtrackedimages cannot both be 1 for pose3d. Change this and re-run main program to proceed.'))
 end
 
 %To check if fast visualization of movies is possible and defualt to
@@ -318,17 +321,21 @@ if plotresults
                 try
                     movie1 = zeros(temp_info.Height,temp_info.Width,3,length(1:nskip:nframes),'uint8');
                 catch
-                    uiwait(msgbox('Images are too large and too many for quick visualization, default visualization of 3D reonstructed data is enabled (Try increasing nskip in the config file)'))
+                    uiwait(msgbox('Images are too large and too many for quick visualization, default visualization of 3D reonstructed data is enabled (Try increasing nskip in the config file or use function make_illustrative_movie.m in the repository instead)'))
                     have2Dtrackedimages = 0;
                 end
             else
                 try
                     movie1 = zeros(temp_info.Height,temp_info.Width,1,length(1:nskip:nframes),'uint8');
                 catch
-                    uiwait(msgbox('Images are too large and too many for quick visualization, default visualization of 3D reonstructed data is enabled (Try increasing nskip in the config file)'))
+                    uiwait(msgbox('Images are too large and too many for quick visualization, default visualization of 3D reonstructed data is enabled (Try increasing nskip in the config file or use function make_illustrative_movie.m in the repository instead)'))
                     have2Dtrackedimages = 0;
                 end
             end
      end
      
+end
+
+if ~exist('flag_mis','var')
+    flag_mis = 0; %Nothing to flag, checks passed
 end

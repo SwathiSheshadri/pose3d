@@ -191,7 +191,7 @@ if calc_error == 1
             i_1 = drawline(ipairs,1);
             i_2 = drawline(ipairs,2);
             %Edge length reconstruction
-            recondata(:,ipairs,imodes) = sqrt(sum((coords3d(:,3*(i_1-1)+1:3*i_1,1) - coords3d(:,3*(i_2-1)+1:3*i_2,1)) .^ 2,2));
+            recondata(:,ipairs,imodes) = sqrt(sum((coords3d(:,3*(i_1-1)+1:3*i_1,imodes) - coords3d(:,3*(i_2-1)+1:3*i_2,imodes)) .^ 2,2));
             errorinrecon(:,ipairs,imodes) = abs(recondata(:,ipairs,imodes) - ground_truth(ipairs));
 
         end

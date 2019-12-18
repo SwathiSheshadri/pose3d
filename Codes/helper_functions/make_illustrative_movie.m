@@ -113,7 +113,7 @@ for i =1:1:size(coords3dall,1)
     end
     hold off
     %view to be set to suit the object being tracked 
-    set(gca,'xtick',[],'ytick',[],'ztick',[],'view',[140.4073 -71.3356],'xlim',[-400 300],'ylim',[-300 300],'zlim',[300 800])
+    set(gca,'xtick',[],'ytick',[],'ztick',[],'view',[140.4073 -71.3356],'xlim',[xmin xmax],'ylim',[ymin ymax],'zlim',[zmin zmax])
   
     for n = 1:size(cam,1)
         subplot(1,subplot_cols,n+1)

@@ -9,6 +9,7 @@ pose3d is implemented in Matlab (The MathWorks Inc., Natick, Massachusetts) for 
   * [Using pose3d for your data](#Using-pose3d-for-your-data)
   * [Data requirements for pose3d](#Data-requirements-for-pose3d)
   * [Checkerboard images or videos for calibration](#Checkerboard-images-or-videos-for-calibration)
+  * [Make your own movie with 3D reconstruction](#Make-your-own-movie-with-3D-reconstruction)
   * [Dependencies](#dependencies)
   * [Video tutorial and troubleshooting](#Video-tutorial-and-troubleshooting)
   * [Installation](#installation)
@@ -55,6 +56,9 @@ Fill the first column of your .csv file with serial numbers going from 0 to n-1 
 3) Matlab's stereoCameraCalibrator GUI recommends using between 10 and 20 frames for calibration. However, we recommend collecting between ~50-100 frames (especially in low light conditions where the checkerboard would be harder to detect), since some of the frames automatically get rejected by the GUI based on the inability to detect whole checkboard or due to the tilt angle of the board being > 45 degree relative to the camera plane.
 Further tips on acquiring calibration files can be obtained at: [Mathworks' Camera Calibration](https://www.mathworks.com/help/vision/ug/single-camera-calibrator-app.html#bt19jdq-1)<br/>
 
+##Make your own movie with 3D reconstruction
+The default plotting function in pose3d is designed for quick visualization of results alongside annotated 2D images from primary camera. The default plotter has the option to visualize every nth frame based on the nskip variable in the config file and also prompts after every minute to decide if you want to continue watching the results movie or are happy with the results. In case of high data volumes that exceeds the working memory available for Matlab) coming from a large number of cameras, high resolution images, higher frame rate etc, the plotter defaults to showing you only the 3D reconstructed data in a frame by frame format. However, if you wish to make a movie of your results, helper function called **make_illustrative_movie.m** is to be used. This function allows you to flexibly select any number of perspectives you want to visualize alongside 3D reconstructed results. make_illustrative_movie is a standalone function and can be used by editing the make_illustrative_movie.m function to include the config file that was used to do 3D reconstruction and then providing paths to the videos and .csv files holding 2D tracked videos for the respective videos. Successful execution of make_illustrative_movie.m function, plots all frames from the selected videos, alongside 3D reconstructed results and saves the results in .avi format in a subfolder called Videos in your experiment folder.
+
 
 ## Dependencies 
 In-built functions of Matlab, Computer Vision Toolbox. Code has been tested on Matlab 2018b across linux, MAC and Windows operating systems. <br/>
@@ -81,6 +85,7 @@ To install this toolbox, add all contents of this repository to Matlab path.
 For questions on the toolbox and citation please contact us at swathishesh@gmail.com or HScherberger@dpz.eu
 
 ## Acknowledgements
-We are very thankful to Mackenzie Mathis and Alexander Mathis for their help in getting us going with using vision based tracking with DLC. Discussions with several colleagues at the German Primate Center including Andrej Fillipow, Michael Berger, Sebastian Mueller, Attila Trunk and Daniela Buchwald were very useful for the development of our tracking experimental setup. Thanks also to Viktorija Schek for testing out some of our implementations. 
+We are very thankful to the JOSS editor Christopher Madan, and reviewers Dana Solav and Sasha Reschechtko whose feedback helped us improve pose3d immensely for public use.
+We are also very thankful to Mackenzie Mathis and Alexander Mathis for their help in getting us going with vision based tracking using DLC. Discussions with several colleagues at the German Primate Center including Andrej Fillipow, Michael Berger, Sebastian Mueller, Attila Trunk and Daniela Buchwald were very useful for the development of our tracking experimental setup. Thanks also to Viktorija Schek for testing out some of our implementations. 
 Our implementation in Matlab was inspired partly by [Anipose](https://github.com/lambdaloop/anipose) - a python toolbox for 3D reconstruction. 
 

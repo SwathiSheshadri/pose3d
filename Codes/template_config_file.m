@@ -32,7 +32,7 @@ usingdlc = 1;
 % 2. 'bestpair' (2D tracked data from best camera pair is used for 3D
 % reconstruction for every time point and feature)
 % 3. 'avg' (3D reconstructed data averaged over pairs)
-% You can also select more than 1 mode and all specified moved will be saved in the specified ordered in Data3d.mat, for instance by setting modes_3drecon = {'all', 'bestpair'};
+% You can also select more than 1 mode and all specified modes will be saved in the specified ordered in Data3d.mat, for instance by setting modes_3drecon = {'all', 'bestpair'};
 modes_3drecon = {'all'}; %this is the recommended mode (other possible modes are {'bestpair'},{'avg'}};
 
 %% Enter your experiment specifics
@@ -154,7 +154,7 @@ format_of_images = '.png'; %can also be '.tif','.jpeg' or any other format suppo
 
 color_bw = 1; % 1 if video/images of 2D tracked data is in color and 0 for black and white
 
-nskip = 1; %(integer) min value nskip can take is 1, increase this when you have long recording (plots results from every nskip frames)
+nskip = 1; %(integer) min value nskip can take is 1, increase this when you have long recording (plots results from every nskip frames, however 3D reconstruction is done for all frames)
 
 % the DLC based likelihood value threshold
 llh_thresh = 0.9; %Can choose values between 0 and 1; 

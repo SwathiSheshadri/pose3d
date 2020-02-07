@@ -123,6 +123,9 @@ CalibrationImages_format = '.png';
 % images
 folderwithpngs = '/Users/username/CalibFiles/';
 
+%total number of frames in your experiment video or total number of images
+nframes = 1000; %Enter this value IF plotresults is set to 0, otherwise it's autofilled based on the link to the video/images you provide
+
 %% Edit below for post-processing and data visualization
 % (Default setting we use are below.)
 % Do you want to undistort 2D coordinates?

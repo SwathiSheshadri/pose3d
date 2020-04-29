@@ -190,7 +190,16 @@ if have2Dtrackedvideos
     
     rec_time = temp.Duration;
     fps = temp.Framerate;
-    nframes = rec_time*fps; 
+    
+    if(mod(fps,1)==0) %check if frame rate is integer
+       nframes = rec_time*fps; 
+    else %if frame rate is non-integer, scan through the entire video to get nframes accurately
+       nframes = 0;
+       while hasFrame(temp)
+          readFrame(temp);
+          nframes =  nframes + 1;
+       end
+    end
     
 elseif have2Dtrackedimages 
     

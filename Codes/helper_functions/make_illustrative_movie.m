@@ -125,9 +125,10 @@ for i =1:1:size(coords3dall,1)
         imshow(b)
         hold on
         scatter(DataAll(i,1:2:2*nfeatures,n),DataAll(i,2:2:2*nfeatures,n),100*ones(1,nfeatures),color_map_self(1:nfeatures,:),'filled'); 
-        drawnow
+        
     end
     set(gcf, 'color', 'white')
+    drawnow
     frame = getframe(gcf);
     writeVideo(vidfile,frame);
 

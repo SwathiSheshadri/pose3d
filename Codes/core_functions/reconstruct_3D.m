@@ -24,7 +24,7 @@ end
 %% 3D reconstruction using 2D coordinates tracked from every camera with    
 
 coords3d = nan(nframes,3*nfeatures,length(modes_3drecon));
-
+coords3d_reproj_err = nan(nframes,nfeatures,ncams,length(modes_3drecon));
 for t = 1:nframes
     
     for i=1:nfeatures
@@ -39,14 +39,14 @@ for t = 1:nframes
             [~,idx_goodness] = sort(squeeze((DataAll_llh(t,2*(i-1)+1,cams_to_use))),'descend');
             
             for imodes = 1:length(modes_3drecon)
-                coords3d(t,3*(i-1)+1:3*i,imodes) =  triangulate_ncams(squeeze(DataAll(t,2*(i-1)+1:2*i,cams_to_use)),cam_mat_all(:,:,cams_to_use),idx_goodness,modes_3drecon{1,imodes});
+                [coords3d(t,3*(i-1)+1:3*i,imodes),coords3d_reproj_err(t,i,cams_to_use,imodes)] =  triangulate_ncams(squeeze(DataAll(t,2*(i-1)+1:2*i,cams_to_use)),cam_mat_all(:,:,cams_to_use),idx_goodness,modes_3drecon{1,imodes});
             end
             
         else
             idx_goodness = ones(ncams,1);
             
             for imodes = 1:length(modes_3drecon)
-                coords3d(t,3*(i-1)+1:3*i,imodes) =  triangulate_ncams(squeeze(DataAll(t,2*(i-1)+1:2*i,cams_to_use)),cam_mat_all(:,:,cams_to_use),idx_goodness,modes_3drecon{1,imodes});
+                [coords3d(t,3*(i-1)+1:3*i,imodes),coords3d_reproj_err(t,i,cams_to_use,imodes)] =  triangulate_ncams(squeeze(DataAll(t,2*(i-1)+1:2*i,cams_to_use)),cam_mat_all(:,:,cams_to_use),idx_goodness,modes_3drecon{1,imodes});
             end
        end
 
@@ -57,14 +57,14 @@ end
 %experiment
 if ~exist([exp_path '/' exp_name '/Data3d/Data3d.mat'],'file') 
     mkdir([exp_path '/' exp_name '/Data3d'])
-    save([exp_path '/' exp_name '/Data3d/Data3d.mat'],'coords3d')
+    save([exp_path '/' exp_name '/Data3d/Data3d.mat'],'coords3d','coords3d_reproj_err')
 else
     answer = questdlg('3D data has been previously saved, do you want to save again?','Save latest 3D reconstructed data','Yes','No','Yes');
         % Handle response
         switch answer
 
             case 'Yes'
-                save([exp_path '/' exp_name '/Data3d/Data3d.mat'],'coords3d')
+                save([exp_path '/' exp_name '/Data3d/Data3d.mat'],'coords3d','coords3d_reproj_err')
                 disp('Saved the new results')
 
             case 'No'

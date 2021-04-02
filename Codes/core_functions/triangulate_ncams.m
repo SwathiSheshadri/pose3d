@@ -1,4 +1,4 @@
-function [X] = triangulate_ncams(points,cam_mat,idx_goodness,reconMode)
+function [X,reprojErr] = triangulate_ncams(points,cam_mat,idx_goodness,reconMode)
 % triangulation function for 3D reconstruction
 %
 % Inputs: 
@@ -29,6 +29,7 @@ function [X] = triangulate_ncams(points,cam_mat,idx_goodness,reconMode)
 % Outputs: 
 % --------
 % X : 3D reconstructed point
+% reprojErr : reprojection error 
 
 % Copyright (c) 2019 Swathi Sheshadri
 % German Primate Center
@@ -73,6 +74,14 @@ switch reconMode
         X = X/X(end);
         X = X(1:3);
         
+        % calculate reprojection error
+        reprojErr = nan(1,numCams);
+        for i = 1:numCams  
+          reprojPoint = cam_mat(:,:,i)*[X; 1];
+          reprojPoint = reprojPoint/reprojPoint(end);
+          reprojErr(i) = norm(points(:, i) - reprojPoint(1:2));
+        end
+        
     case 'bestpair' %Use this case if by design only 2 cams can see a feature at a time
         
         points = points(:,idx_goodness(1:2));
@@ -89,6 +98,14 @@ switch reconMode
         X = V(:, end);
         X = X/X(end);
         X = X(1:3);
+
+        % calculate reprojection error
+        reprojErr = nan(1,numCams);
+        for i = 1:2  
+          reprojPoint = cam_mat(:,:,i)*[X; 1];
+          reprojPoint = reprojPoint/reprojPoint(end);
+          reprojErr(idx_goodness(i)) = norm(points(:, i) - reprojPoint(1:2));
+        end
         
     case 'avg' % this is included for comparison purposes only 
         
@@ -112,4 +129,12 @@ switch reconMode
             
         end
         X = mean(Xall,2); %average across all pairs
+
+        % calculate reprojection error
+        reprojErr = nan(1,numCams);
+        for i = 1:numCams  
+          reprojPoint = cam_mat(:,:,i)*[X; 1];
+          reprojPoint = reprojPoint/reprojPoint(end);
+          reprojErr(i) = norm(points(:, i) - reprojPoint(1:2));
+        end
 end

@@ -45,17 +45,17 @@ end
 if nargin < 2
     error('Not enough inputs');
 end
-
+numCams = size(points,2);
 % Filling in unset optional values.
 switch nargin
     case 2
-        idx_goodness = ones(ncams,1);
+        idx_goodness = ones(numCams,1);
         reconMode = 'all';
     case 3
         reconMode = 'all'; 
 end
 
-numCams = size(points,2);
+
 
 %Triangulation for reconstruction
 switch reconMode

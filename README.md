@@ -83,7 +83,7 @@ To install this toolbox, add all contents of this repository to Matlab path.
 
 ## Citation
 Sheshadri et al., (2020). 3D reconstruction toolbox for behavior tracked with multiple cameras. Journal of Open Source Software, 5(45), 1849, https://doi.org/10.21105/joss.01849 <br/>
-For questions on the toolbox please contact us at swathishesh@gmail.com or HScherberger@dpz.eu
+
 
 ## Acknowledgements
 We are very thankful to the JOSS editor Christopher Madan, and reviewers Dana Solav and Sasha Reschechtko whose feedback helped us improve pose3d immensely for public use.
